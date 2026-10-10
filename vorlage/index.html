@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* ===================================================================
+   INHALT DES SPIELS – NUR DIESEN BLOCK ÄNDERN
+   Alles unterhalb dieses Blocks (Spielmechanik, Gestaltung, Prüfung)
+   bleibt unverändert. Vorlage: tonchime/lernspiele, vorlage/index.html
+   (Grundlage: Claude-Version v7 vom 10.10.2026).
+
+   Schreibweise:
+   - Minuszeichen als „−“ oder „-“; beides wird beim Prüfen gleich gewertet.
+   - Stufe 2: Auswahlliste in eckigen Klammern, Möglichkeiten mit | getrennt,
+     die richtige mit * markiert: [12|*4|3]. Die Reihenfolge bleibt so.
+   - Stufe 3: Eingabefeld in geschweiften Klammern mit der Lösung: {6}.
+     Unter „loesungen“ stehen die Lösungen x₁, x₂ …; ihre Reihenfolge
+     ist beim Prüfen egal, doppelte Eingaben werden als falsch erkannt.
+   - In Texten ist „ &nbsp; “ ein breiterer Abstand.
+   - Stufe 1: höchstens 6 Paare, damit alles ohne Scrollen auf das Handy passt.
+   =================================================================== */
+const SPIEL={
+  titel:"Drei Verfahren",                      // Spieltitel
+  fach:"Mathematik",
+  untertitel:"Wurzelziehen · Ausklammern · pq-Formel",
+  datum:"2026-10-12",                           // Unterrichtsdatum
+  version:"Claude-Version · v7",                // sichtbare Versionsmarke oben rechts
+  beispielkarten:["x² = 36","±6"],              // die zwei Mini-Karten auf der Kachel von Stufe 1
+
+  // Stufe 1: Paare zuordnen [linke Karte, passende Karte]
+  paare:[
+    ["x² = 36","x = 6 oder x = −6"],
+    ["2x² = 50","x = 5 oder x = −5"],
+    ["x² − 5x = 0","x = 0 oder x = 5"],
+    ["x² + 3x = 0","x = 0 oder x = −3"],
+    ["x² + 6x + 8 = 0","x = −2 oder x = −4"],
+    ["x² − 2x − 15 = 0","x = 5 oder x = −3"]
+  ],
+
+  // Stufe 2: Zeilen mit Auswahllisten [Zeile, grauer Hinweis rechts (optional)]
+  stufe2:[
+    ["3x² + 12x = 15","| − 15"],
+    ["3x² + 12x − 15 = 0","| : 3"],
+    ["x² + [12|*4|3] x [− 15|+ 5|*− 5] = 0"],
+    ["p = [−4|*4|12] &nbsp; q = [5|*−5|−15]"],
+    ["x₁,₂ = [2|−4|*−2] ± √([*4|2|16] − ([−15|5|*−5]))"],
+    ["x₁,₂ = −2 ± [9|*3|1]"],
+    ["x₁ = [5|−1|*1] &nbsp; x₂ = [−1|*−5|1]"]
+  ],
+
+  // Stufe 3: Gleichungen mit Eingabefeldern
+  stufe3:[
+    {gleichung:"x² = 81", loesungen:["9","-9"]},
+    {gleichung:"x² − 6x = 0", schritte:["x · (x − {6}) = 0"], loesungen:["0","6"]},
+    {gleichung:"x² + 2x − 8 = 0", schritte:["p = {2} &nbsp; q = {-8}"], loesungen:["2","-4"]},
+    {gleichung:"4x² = 100", loesungen:["5","-5"]}
+  ],
+
+  // Hilfetexte (Glühbirne) je Stufe
+  hilfe1:"Nur x² und eine Zahl: Wurzelziehen.\nx² und x ohne Zahl: Ausklammern.\nx², x und eine Zahl: pq-Formel.",
+  hilfe2:"Zuerst rechts 0 herstellen. Dann alle Terme durch die Zahl vor x² teilen.\n\np und q mit Vorzeichen ablesen.\nx₁,₂ = −p/2 ± √((p/2)² − q)",
+  hilfe3:"Wurzelziehen: auch die negative Lösung angeben.\nAusklammern: x · (x − 6) = 0.\npq-Formel: x₁,₂ = −p/2 ± √((p/2)² − q)."
+};
+/* ======================= ENDE DES INHALTSBLOCKS ===================== */
+</script>
+<title>Lernspiel</title>
+<style>
+:root{--blue:#329ddd;--blue-dark:#2879c8;--ink:#333;--green:#83e287;--red:#f19089;--cw:230px;--ch:60px;--pg:6px}
+*{box-sizing:border-box}body{margin:0;font:18px/1.45 Arial,Helvetica,sans-serif;color:var(--ink);background:#fff3b9}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:default}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #14569e;outline-offset:4px}[hidden]{display:none!important}
+header{height:38px;display:flex;align-items:center;gap:9px;background:#fff;border-bottom:1px solid #bbb;padding:3px 8px;position:relative;z-index:5;font-size:14px}h1{font-size:14px;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}.back{border:1px solid #bcbcbc;background:linear-gradient(#50b5e6,#3197d4);border-radius:18px;color:#fff;width:44px;height:29px;line-height:23px;font-size:25px}.stage-count{font-size:12px;color:#666;white-space:nowrap}
+.workspace{min-height:calc(100dvh - 38px);position:relative;background-color:#fff3b9;background-image:radial-gradient(ellipse at 18% 28%,#eacb742c,transparent 37%),radial-gradient(ellipse at 74% 72%,#fffcceaa,transparent 36%),radial-gradient(#c3a04418 .7px,transparent .9px);background-size:auto,auto,7px 9px}
+.tools{position:absolute;top:5px;left:6px;display:flex;gap:6px;z-index:20}.tool{background:transparent;border:0;width:33px;height:33px;display:grid;place-items:center;padding:3px}.tool svg{width:26px;height:26px}.fullscreen{position:absolute;right:7px;top:5px;z-index:20;font-size:22px;color:#777}
+.collection{min-height:calc(100dvh - 38px);padding:38px 20px 60px;background:radial-gradient(ellipse at 45% 35%,#485769,#141e2e 78%);color:white;text-align:center}.collection h2{font-weight:normal;font-size:24px;margin:0 0 6px}.collection .intro{font-size:16px;color:#e1e7ed;margin:0 0 28px}.tiles{display:flex;justify-content:center;gap:22px;flex-wrap:wrap}.tile{width:200px;min-height:180px;border:5px solid #ddd;border-radius:20px;padding:10px;color:#333;background:linear-gradient(#fff,#e8e8e8);box-shadow:0 0 5px #fff9,0 4px 9px #0006;text-align:left;position:relative}.tile:disabled{opacity:.36}.tile-art{height:104px;display:grid;place-items:center;background:#fff;font-size:35px;margin-bottom:8px;color:#777}.tile-label{font-size:14px;line-height:1.35;display:block}.tile .status{position:absolute;right:8px;top:8px;font-weight:bold;color:#156c2a;background:#fff;border-radius:50%;font-size:18px;padding:2px 7px}.tile.completed{border-color:#9bdd97}.tile-art.pairs{display:flex;gap:10px;justify-content:center}.mini-card{font-size:20px;background:#fff;border:2px solid #ccc;box-shadow:2px 2px 0 #ddd;transform:rotate(-8deg);padding:13px 6px}.mini-card+span{transform:rotate(8deg)}.mini-lines{width:85%;height:65px;background:repeating-linear-gradient(to bottom,#bbb 0 6px,transparent 6px 19px);position:relative}.mini-lines:after{content:'?';position:absolute;left:30%;top:16px;background:#fff;border:2px solid #888;font-size:19px;width:38px;height:28px;text-align:center;line-height:25px}.collection-note{font-size:14px;color:#cad5e1;margin-top:30px}
+#s1{padding:43px 10px 0}#board{max-width:1080px;margin:auto;position:relative;height:calc(100svh - 81px);user-select:none;-webkit-user-select:none;touch-action:pan-y}.unit{position:absolute;width:var(--cw);transition:transform .22s;touch-action:none}.unit.dragging{transition:none;z-index:100000!important;filter:drop-shadow(0 6px 7px #0004)}.card{width:100%;height:var(--ch);padding:6px 6px;background:#fff;border:5px solid transparent;border-radius:18px;box-shadow:0 3px 5px #0005;display:flex;justify-content:center;align-items:center;color:#333;position:relative;font-size:var(--fs,16px);white-space:normal;line-height:1.15;text-align:center;touch-action:none;cursor:grab}.card::before{content:'';position:absolute;top:-10px;left:calc(50% - 12px);width:24px;height:24px;border-radius:50%;background:linear-gradient(130deg,#ffbf80,#ff9d54);box-shadow:1px 2px 5px #0004;border:1px solid #ffc889}.card.solution::before{background:linear-gradient(130deg,#46b8e5,#1b99d2);border-color:#54b7d9}.unit.pair .card+.card{margin-top:var(--pg)}.unit.good .card{border-color:var(--green);cursor:grab}.unit.bad .card{border-color:var(--red)}.unit.selected .card{border-color:#777}.unit.target .card{border-color:#777}.unit.pair .card:last-of-type::before{display:none}.split{position:absolute;top:calc(var(--ch) - 7px);left:20%;height:20px;width:60%;border:0;background:repeating-linear-gradient(0deg,#e6e6daaa 0 3px,#fbfaf0ca 3px 7px);box-shadow:0 1px 3px #9994;color:#666;z-index:3;font-size:15px;line-height:20px;padding:0;opacity:.85}.split:hover,.split:focus-visible{background:#ddd;color:#333;opacity:1}.unit.good .split{visibility:hidden}
+.sheet{max-width:1100px;margin:auto;padding:65px 35px 110px;min-height:calc(100dvh - 38px)}.text{max-width:770px}.line{font-size:22px;margin-bottom:12px;line-height:2}.line .eq{font-weight:bold;display:block}.line .r{color:#666;font-size:16px;margin-left:16px}input,select{color:#333;background:#fff;border:1px solid #aaa;border-radius:4px;font-size:21px;min-height:43px;padding:4px 7px;margin:2px;vertical-align:middle}select{min-width:65px;max-width:130px}input{width:3.3em;text-align:center}.ok{box-shadow:0 0 0 3px var(--green);border-color:#38a646}.bad{box-shadow:0 0 0 3px var(--red);border-color:#b8332e}
+.check{position:fixed;right:23px;bottom:22px;width:77px;height:77px;border-radius:50%;border:0;background:linear-gradient(#31a8e1,#287bcb);box-shadow:0 2px 3px #0006;color:white;z-index:30;display:grid;place-items:center}.check svg{width:39px;height:39px}.check:hover,.back:hover{filter:brightness(1.07)}.feedback{position:fixed;bottom:22px;left:20px;max-width:calc(100% - 140px);padding:8px 12px;border-radius:7px;background:#fffdf4e8;box-shadow:0 1px 5px #0002;font-size:15px;z-index:25}.feedback:empty{display:none}
+dialog{border:9px solid #ddd;border-radius:14px;max-width:min(550px,calc(100vw - 30px));width:550px;padding:17px 14px 12px;box-shadow:0 0 10px #0008;color:#333;text-align:center;background:#fff}dialog::backdrop{background:#00000009}dialog h2{font-size:26px;margin:0 0 15px}dialog p{font-size:20px;text-align:left;margin:0 0 17px;white-space:pre-line;max-height:55dvh;overflow:auto}.dialog-buttons{display:flex;justify-content:center;gap:10px}dialog button{background:linear-gradient(#fff,#eee);border:1px solid #888;border-radius:3px;padding:5px 13px;font-size:22px;color:#333}dialog.success{border-color:#a8df9c}.finish{text-align:center;padding:75px 20px}.finish h2{font-size:28px}.finish .stars{font-size:60px;color:#e4ac18}.finish button{background:#fff;border:1px solid #aaa;border-radius:5px;padding:10px 20px}
+@media(max-width:600px){header{height:42px}.workspace,.collection{min-height:calc(100dvh - 42px)}.stage-count{display:none}.collection{padding:32px 12px}.tiles{gap:14px}.tile{width:158px;min-height:164px}.tile-art{height:84px}.tile-label{font-size:13px}.collection h2{font-size:22px}#s1{padding:43px 6px 0}#board{height:calc(100svh - 85px)}.card{border-width:3px;border-radius:10px;padding:2px 2px}.card::before{width:12px;height:12px;left:calc(50% - 6px);top:-6px}.split{height:14px;top:calc(var(--ch) - 6px);left:25%;width:50%}.check{width:61px;height:61px;right:14px;bottom:16px}.check svg{width:31px;height:31px}.feedback{font-size:13px;left:10px;bottom:15px;max-width:calc(100% - 92px);padding:5px 8px}.sheet{padding:58px 14px 100px}.line{font-size:18px;margin-bottom:18px;line-height:2.2}.line .r{font-size:13px;margin-left:4px}input,select{font-size:18px;min-width:0;min-height:41px;padding:3px 5px}select{max-width:100px}input{width:3em}dialog{border-width:7px;padding:15px 12px}dialog h2{font-size:23px}dialog p{font-size:18px}dialog button{font-size:20px}.mini-card{font-size:16px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+.card{background:#e8f2fc}.card.solution{background:#fff8dc}.card::before{background:linear-gradient(130deg,#46b8e5,#1b99d2);border-color:#54b7d9}.card.solution::before{background:linear-gradient(130deg,#ffbf80,#ff9d54);border-color:#ffc889}.unit.pair .card:nth-child(2)::before{display:none}
+</style>
+</head>
+<body>
+<header><button id="back" class="back" aria-label="Zur Übersicht" hidden>←</button><h1 id="title"></h1><small id="ver" style="color:#777;font-size:11px;white-space:nowrap"></small><span class="stage-count" id="stage-count">5 Minuten</span></header>
+<main class="workspace" id="workspace">
+<div class="tools"><button class="tool" id="info" aria-label="Aufgabe anzeigen" title="Aufgabe"><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M3 4h21v15H13l-5 5v-5H3z" fill="#effaff" stroke="#558583"/><text x="9" y="18" font-size="18" font-weight="bold" fill="#4b9a37">?</text></svg></button><button class="tool" id="help" aria-label="Hilfe anzeigen" title="Hilfe" hidden><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M10 22c0-6-5-6-5-12a10 10 0 0120 0c0 6-5 6-5 12z" fill="#ffe36a" stroke="#b58b22"/><path d="M11 23h8m-7 3h6" stroke="#777" stroke-width="2"/></svg></button></div>
+<button class="tool fullscreen" id="fullscreen" aria-label="Vollbild umschalten" title="Vollbild">⛶</button>
+<section id="collection" class="collection"><h2 id="c-title"></h2><p class="intro" id="c-sub"></p><div class="tiles">
+<button class="tile" data-stage="1"><span class="tile-art pairs" aria-hidden="true"><span class="mini-card" id="mini1"></span><span class="mini-card" id="mini2"></span></span><span class="tile-label">Stufe 1 · Paare zuordnen</span><span class="status" aria-hidden="true"></span></button>
+<button class="tile" data-stage="2" disabled><span class="tile-art" aria-hidden="true"><span class="mini-lines"></span></span><span class="tile-label">Stufe 2 · Zahlen auswählen</span><span class="status" aria-hidden="true">🔒</span></button>
+<button class="tile" data-stage="3" disabled><span class="tile-art" aria-hidden="true"><span class="mini-lines"></span></span><span class="tile-label">Stufe 3 · Lösungen eintragen</span><span class="status" aria-hidden="true">🔒</span></button>
+</div><p class="collection-note">5 Minuten insgesamt · Beginnen Sie mit Stufe 1.</p></section>
+<section id="s1" hidden aria-label="Paare zuordnen"><div id="board"></div></section>
+<section id="s2" hidden aria-label="Zahlen auswählen"><div class="sheet"><div class="text" id="t2"></div></div></section>
+<section id="s3" hidden aria-label="Lösungen eintragen"><div class="sheet"><div class="text" id="t3"></div></div></section>
+<section id="finish" class="finish" hidden><div class="stars" aria-hidden="true">★ ★ ★</div><h2>Alle drei Stufen geschafft!</h2><p id="f-sub"></p><button id="restart">Noch einmal</button></section>
+</main>
+<div id="feedback" class="feedback" role="status" aria-live="polite"></div>
+<button class="check" id="check" aria-label="Lösung überprüfen" title="Lösung überprüfen" hidden><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 6H7a3 3 0 00-3 3v15a3 3 0 003 3h17a3 3 0 003-3v-8M11 14l6 6L29 7"/></svg></button>
+<dialog id="dialog" aria-labelledby="dialog-title" aria-describedby="dialog-text"><h2 id="dialog-title">Aufgabe</h2><p id="dialog-text"></p><div class="dialog-buttons"><button id="dialog-cancel" hidden>Abbrechen</button><button id="dialog-ok">OK</button></div></dialog>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const PAIRS=SPIEL.paare;
+const TASK=["Beginnen Sie mit Stufe 1. Nach jeder gelösten Stufe wird die nächste freigeschaltet.\n\nSie haben insgesamt fünf Minuten. Sie müssen nicht alle Stufen schaffen. Stoppen Sie beim Signal der Lehrkraft.","Ordnen Sie jeder Gleichung ihre Lösungen zu. Ziehen Sie passende Karten aufeinander oder tippen Sie sie nacheinander an.\n\nPrüfen Sie mit dem blauen Haken.","Wählen Sie die fehlenden Zahlen aus.\n\nPrüfen Sie mit dem blauen Haken.","Lösen Sie die Gleichungen. Tragen Sie die fehlenden Zahlen ein.\n\nPrüfen Sie mit dem blauen Haken."];
+const HELP=["",SPIEL.hilfe1+"\n\nZum Trennen eines Paares tippen Sie auf den Streifen zwischen den Karten.",SPIEL.hilfe2,SPIEL.hilfe3+"\n\nDie Reihenfolge der beiden Lösungen ist egal."];
+const TITLES=[SPIEL.titel+' · '+SPIEL.fach,'Stufe 1 · Paare zuordnen','Stufe 2 · Zahlen auswählen','Stufe 3 · Lösungen eintragen'];
+const NUMBERS=['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn'];
+function esc(t){return String(t).replace(/&(?!nbsp;)/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fillContent(){document.title=SPIEL.titel+' · Lernspiele';const meta=document.createElement('meta');meta.name='description';meta.content=SPIEL.titel+': Zuordnung, Auswahl und Lückentext. Ein '+SPIEL.fach+'-Lernspiel für fünf Minuten.';document.head.append(meta);$('title').textContent=TITLES[0];$('ver').textContent=SPIEL.version;$('c-title').textContent=SPIEL.titel;$('c-sub').textContent=SPIEL.untertitel;$('f-sub').textContent=SPIEL.untertitel;$('mini1').textContent=SPIEL.beispielkarten[0];$('mini2').textContent=SPIEL.beispielkarten[1];
+$('t2').innerHTML=SPIEL.stufe2.map(([line,hint])=>'<div class="line">'+esc(line).replace(/\[([^\]]+)\]/g,(m,list)=>{const opts=list.split('|').map(o=>o.trim());const right=opts.find(o=>o.startsWith('*'));return '<select data-a="'+(right?right.slice(1).trim():'')+'"><option value="">?</option>'+opts.map(o=>'<option>'+o.replace(/^\*/,'').trim()+'</option>').join('')+'</select>'})+(hint?' <span class="r">'+esc(hint)+'</span>':'')+'</div>').join('');
+$('t3').innerHTML=SPIEL.stufe3.map((t,k)=>{const field=a=>'<input data-a="'+a.trim()+'">';const steps=(t.schritte||[]).map(l=>esc(l).replace(/\{([^}]+)\}/g,(m,a)=>field(a))).join('<br>');const sol=t.loesungen.length===1?'x = <input data-set="s'+k+'" data-a="'+esc(t.loesungen[0])+'">':t.loesungen.map((a,i)=>'x'+'₁₂₃₄'[i]+' = <input data-set="s'+k+'" data-a="'+esc(a)+'">').join(' &nbsp; ');return '<div class="line"><span class="eq">'+esc(t.gleichung)+'</span>'+steps+(steps?'<br>':'')+sol+'</div>'}).join('')}
+fillContent();
+let stage=0,unlocked=1,completed=[false,false,false,false],units=[],uid=0,cw=230,ch=60,pg=6,fs=16,joining=false,lastW=window.innerWidth,selected=null,drag=null,skipClick=false,dialogAction=null,lastFocus=null,zTop=1;
+const board=$('board');
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function showDialog(title,text,action=null,button='OK',confirm=false){lastFocus=document.activeElement;$('dialog-title').textContent=title;$('dialog-text').textContent=text;$('dialog-ok').textContent=button;$('dialog-cancel').hidden=!confirm;$('dialog').classList.toggle('success',title==='Richtig!');dialogAction=action;if(!$('dialog').open)$('dialog').showModal();$('dialog-ok').focus()}
+function closeDialog(run){$('dialog').close();const fn=dialogAction;dialogAction=null;if(run&&fn)fn();else if(lastFocus?.isConnected)lastFocus.focus()}
+$('dialog-ok').onclick=()=>closeDialog(true);$('dialog-cancel').onclick=()=>closeDialog(false);$('dialog').addEventListener('cancel',e=>{e.preventDefault();closeDialog(false)});
+function status(text){$('feedback').textContent=text}
+function updateTiles(){document.querySelectorAll('.tile').forEach(t=>{const n=+t.dataset.stage;t.disabled=n>unlocked;t.classList.toggle('completed',completed[n]);t.querySelector('.status').textContent=completed[n]?'✓':n>unlocked?'🔒':'';t.setAttribute('aria-label',TITLES[n]+(completed[n]?', abgeschlossen':n>unlocked?', noch gesperrt':''))})}
+function go(n,task=true){if(n>unlocked&&n<4)return;stage=n;selected=null;status('');['collection','s1','s2','s3','finish'].forEach((id,i)=>$(id).hidden=i!==n);$('back').hidden=n===0;$('help').hidden=n===0||n===4;$('check').hidden=n===0||n===4;$('info').hidden=n===4;$('title').textContent=TITLES[n]||SPIEL.titel+' · Geschafft!';$('stage-count').textContent=n>0&&n<4?n+' / 3':'5 Minuten';updateTiles();if(n===1){if(!units.length)build();else if(window.innerWidth!==lastW){lastW=window.innerWidth;arrange()}}window.scrollTo(0,0);if(task&&n<4)showDialog('Aufgabe',TASK[n])}
+document.querySelectorAll('.tile').forEach(t=>t.onclick=()=>go(+t.dataset.stage));$('back').onclick=()=>go(0,false);$('info').onclick=()=>showDialog('Aufgabe',TASK[stage]);$('help').onclick=()=>showDialog('Hilfe',HELP[stage]);
+$('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{status('Vollbild ist in diesem Browser nicht verfügbar.')}};
+function unitHeight(u){return ch*u.cards.length+(u.cards.length===2?pg:0)}
+function dimensions(){const w=board.clientWidth,phone=w<620;const cols=phone?3:Math.min(4,Math.floor(w/245));const gap=phone?(w<340?6:8):32;cw=Math.min(240,Math.floor((w-(cols+1)*gap)/cols));ch=phone?44:56;pg=phone?2:4;fs=phone?(w<340?11:12):Math.min(18,Math.max(13,Math.round(cw/12)));board.style.setProperty('--cw',cw+'px');board.style.setProperty('--ch',ch+'px');board.style.setProperty('--pg',pg+'px');board.style.setProperty('--fs',fs+'px');return {w,cols,gap,phone}}
+function build(){units=shuffle(PAIRS.flatMap((p,k)=>p.map((text,side)=>({id:++uid,cards:[{text,k,side}],state:'',x:0,y:0,rot:Math.round((Math.random()*4-2)*10)/10,z:++zTop}))));render();arrange(true)}
+function render(){if(drag)clearDrag();board.replaceChildren();units.forEach(u=>{const wrap=document.createElement('div');wrap.className='unit'+(u.cards.length===2?' pair':'')+(u.state==='good'?' good':u.state==='bad'?' bad':'');wrap.dataset.unit=u.id;u.el=wrap;u.cards.forEach(c=>{const b=document.createElement('button');b.className='card'+(c.side?' solution':'');b.textContent=c.text;b.setAttribute('aria-label',c.text+(u.cards.length===2?', verbunden mit '+u.cards.find(o=>o!==c).text:''));b.setAttribute('aria-pressed',selected===u?'true':'false');b.addEventListener('pointerdown',e=>startDrag(e,u));b.onclick=()=>{if(skipClick){skipClick=false;return}tap(u)};wrap.append(b)});if(u.cards.length===2){const split=document.createElement('button');split.className='split';split.textContent='';split.setAttribute('aria-label','Paar trennen: '+u.cards[0].text+' und '+u.cards[1].text);split.title='Paar trennen';split.disabled=u.state==='good';split.onclick=()=>separate(u);wrap.append(split)}board.append(wrap);place(u)});refreshSelection()}
+function place(u){u.el.style.transform=`translate(${u.x}px,${u.y}px)`+(u.cards.length===1&&u.rot?` rotate(${u.rot}deg)`:'');u.el.style.height=unitHeight(u)+'px';u.el.style.zIndex=u.z||1}
+function arrange(fresh){if(stage!==1)return;const {w,cols,gap,phone}=dimensions();const rows=Math.ceil(units.length/cols);const uh=Math.max(...units.map(unitHeight));const top=board.getBoundingClientRect().top+window.scrollY;const probe=document.createElement('div');probe.style.cssText='position:fixed;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none';document.body.append(probe);const svh=Math.min(window.innerHeight,probe.offsetHeight||window.innerHeight);probe.remove();const H=Math.max(360,svh-top);const chk=$('check').getBoundingClientRect();const band=Math.max(phone?80:96,Math.round(window.innerHeight-chk.top)+10);const usable=H-band-12;const vgap=Math.max(phone?14:24,Math.floor((usable-rows*uh)/Math.max(1,rows)));const pitch=uh+vgap;const total=rows*pitch-vgap;board.style.height=Math.max(H,total+band+12)+'px';const offset=12+Math.max(0,Math.floor((usable-total)/2));const used=cols*cw+(cols-1)*gap;const left=Math.max(0,Math.floor((w-used)/2));const jy=Math.max(0,Math.min(8,Math.floor((vgap-6)/2)));units.forEach((u,i)=>{const c=i%cols,r=Math.floor(i/cols);if(fresh){u.jx=Math.round(Math.random()*6-3);u.jy=Math.round(Math.random()*2*jy-jy)}u.x=Math.max(0,Math.min(w-cw,left+c*(cw+gap)+(u.jx||0)));u.y=Math.max(12,offset+r*pitch+(u.jy||0));place(u)})}
+function freeSpot(u,others){const w=board.clientWidth,h=board.clientHeight,uh=unitHeight(u);const fits=(x,y)=>x>=0&&y>=12&&x+cw<=w&&y+uh<=h&&!others.some(o=>overlap(u,o,x,y));if(fits(u.x,u.y))return [u.x,u.y];let best=null,bd=Infinity;for(let y=12;y+uh<=h;y+=10)for(let x=0;x+cw<=w;x+=10){const d=Math.hypot(x-u.x,y-u.y);if(d<bd&&fits(x,y)){bd=d;best=[x,y]}}if(best)return best;board.style.height=(h+uh+12)+'px';return [u.x,h]}
+function covered(u,f){const x=Math.max(0,Math.min(u.x+cw,f.x+cw)-Math.max(u.x,f.x)),y=Math.max(0,Math.min(u.y+unitHeight(u),f.y+unitHeight(f))-Math.max(u.y,f.y));return x*y/(cw*unitHeight(u))}
+function settle(fixed){const others=units.filter(u=>u!==fixed);for(const u of others){if(covered(u,fixed)<.6)continue;const rest=units.filter(o=>o!==u);const [x,y]=freeSpot(u,rest);u.x=x;u.y=y;place(u)}}
+function refreshSelection(){units.forEach(u=>{u.el.classList.toggle('selected',selected===u);u.el.querySelectorAll('.card').forEach(b=>b.setAttribute('aria-pressed',String(selected===u)))})}
+function tap(u){if(u.cards.length===2){status(u.state==='good'?'Dieses Paar ist richtig.':'Zum Trennen auf den Streifen zwischen den Karten tippen.');return}if(selected&&selected!==u){join(selected,u);selected=null}else selected=selected===u?null:u;refreshSelection()}
+function join(a,b){if(a===b||a.cards.length!==1||b.cards.length!==1)return;const next={id:++uid,cards:[...b.cards,...a.cards],state:'',x:b.x,y:b.y,z:++zTop};if(b.y+ch*2+pg+12>board.clientHeight)board.style.height=(b.y+ch*2+pg+12)+'px';const i=units.indexOf(b);units=units.filter(u=>u!==a&&u!==b);units.splice(Math.min(i,units.length),0,next);selected=null;joining=false;render();status('Paar verbunden. Mit dem blauen Haken prüfen.');next.el.querySelector('.card').focus({preventScroll:true})}
+function separate(u){if(u.state==='good')return;const i=units.indexOf(u);units.splice(i,1,...u.cards.map((c,j)=>({id:++uid,cards:[c],state:'',x:u.x,y:u.y+j*(ch+pg),rot:0,z:++zTop})));selected=null;render();status('Paar getrennt. Ordnen Sie die Karten neu zu.')}
+function overlap(a,b,x=a.x,y=a.y){return x<b.x+cw&&x+cw>b.x&&y<b.y+unitHeight(b)&&y+unitHeight(a)>b.y}
+function startDrag(e,u){if(e.button!==0||drag||joining)return;skipClick=false;const el=e.currentTarget;el.setPointerCapture(e.pointerId);u.z=++zTop;place(u);drag={u,el,startX:e.clientX,startY:e.clientY,ox:u.x,oy:u.y,moved:false,target:null};el.onpointermove=moveDrag;el.onpointerup=finishDrag;el.onpointercancel=cancelDrag}
+function moveDrag(e){if(!drag)return;const d=drag,dx=e.clientX-d.startX,dy=e.clientY-d.startY;if(!d.moved&&Math.hypot(dx,dy)<7)return;d.moved=true;d.u.el.classList.add('dragging');d.u.x=Math.max(0,Math.min(board.clientWidth-cw,d.ox+dx));d.u.y=Math.max(12,Math.min(board.clientHeight-unitHeight(d.u),d.oy+dy));place(d.u);d.target=null;if(d.u.cards.length===1){let distance=Infinity;for(const u of units){if(u===d.u||u.cards.length!==1)continue;const dist=Math.hypot(u.x-d.u.x,u.y-d.u.y);if(Math.abs(u.x-d.u.x)<cw*.68&&Math.abs(u.y-d.u.y)<ch*.8&&dist<distance){d.target=u;distance=dist}}}units.forEach(u=>u.el.classList.toggle('target',u===d.target))}
+function clearDrag(){if(!drag)return;drag.el.onpointermove=drag.el.onpointerup=drag.el.onpointercancel=null;units.forEach(u=>u.el.classList.remove('dragging','target'));drag=null}
+function finishDrag(){if(!drag)return;const d=drag;clearDrag();skipClick=d.moved;if(d.moved){selected=null;if(d.target){const t=d.target,u=d.u;joining=true;u.x=t.x;u.y=t.y+ch+pg;u.rot=0;u.el.style.pointerEvents='none';t.el.style.pointerEvents='none';place(u);setTimeout(()=>{joining=false;if(units.includes(u)&&units.includes(t)&&u.cards.length===1&&t.cards.length===1)join(u,t)},170)}else{const u=d.u,under=units.filter(o=>o!==u&&o.cards.length===1&&covered(o,u)>=.5);if(under.length){u.z=Math.max(1,Math.min(...under.map(o=>o.z||1))-1);place(u)}}refreshSelection();setTimeout(()=>skipClick=false,0)}}
+function cancelDrag(){finishDrag()}
+function complete(n){completed[n]=true;unlocked=Math.max(unlocked,Math.min(3,n+1));updateTiles();showDialog('Richtig!',n===1?'Sie haben alle '+(NUMBERS[PAIRS.length]||PAIRS.length)+' Paare richtig zugeordnet.':n===2?'Alle Zahlen stimmen.':'Sie haben alle drei Stufen geschafft!',()=>go(n+1,n<3),n<3?'Weiter zu Stufe '+(n+1):'Abschließen')}
+function checkPairs(){let good=0,bad=0;for(const u of units){if(u.cards.length!==2)continue;const a=u.cards[0],b=u.cards[1];u.state=a.k===b.k&&a.side!==b.side?'good':'bad';if(u.state==='good')good++;else bad++}render();if(good===PAIRS.length){status(PAIRS.length+' von '+PAIRS.length+' Paaren richtig.');complete(1)}else status(good+' von '+PAIRS.length+' Paaren richtig.'+(bad?' Rote Paare trennen und neu zuordnen.':' Ordnen Sie die übrigen Karten zu.'))}
+function norm(s){return String(s??'').replace(/[−–﹣－]/g,'-').replace(/\s+/g,'').replace(',','.').replace(/^\+(?=\d)/,'')}
+function gradeValues(values,answers){const remaining=answers.map(norm);return values.map(v=>{v=norm(v);if(!v)return null;const i=remaining.indexOf(v);if(i<0)return false;remaining.splice(i,1);return true})}
+function checkFields(root){const fields=[...root.querySelectorAll('select,input')];let ok=0,empty=0;const sets={};const paint=(f,result)=>{f.classList.remove('ok','bad');f.removeAttribute('aria-invalid');if(result===null){empty++;return}f.classList.add(result?'ok':'bad');f.setAttribute('aria-invalid',String(!result));if(result)ok++};fields.forEach(f=>{if(f.dataset.set)(sets[f.dataset.set]??=[]).push(f);else paint(f,!norm(f.value)?null:norm(f.value)===norm(f.dataset.a))});Object.values(sets).forEach(g=>{const results=gradeValues(g.map(f=>f.value),g.map(f=>f.dataset.a));g.forEach((f,i)=>paint(f,results[i]))});return {ok,empty,total:fields.length}}
+function checkText(){const result=checkFields($('t'+stage));if(result.ok===result.total)complete(stage);else status(result.ok+' von '+result.total+' richtig.'+(result.empty?' Noch '+result.empty+(result.empty===1?' Feld':' Felder')+' leer.':' Rote Felder verbessern.'))}
+$('check').onclick=()=>stage===1?checkPairs():checkText();
+document.querySelectorAll('input,select').forEach((f,i)=>{f.setAttribute('aria-label',(f.closest('#t2')?'Stufe 2':'Stufe 3')+', Eingabe '+(i+1));if(f.tagName==='INPUT'){f.autocomplete='off';f.spellcheck=false;f.inputMode='text'}f.addEventListener('input',()=>{f.classList.remove('ok','bad');f.removeAttribute('aria-invalid');status('')})});
+function restart(){units=[];unlocked=1;completed=[false,false,false,false];document.querySelectorAll('input,select').forEach(f=>{f.value='';f.classList.remove('ok','bad');f.removeAttribute('aria-invalid')});go(0)}
+$('restart').onclick=restart;
+document.addEventListener('touchmove',e=>{if(drag)e.preventDefault()},{passive:false});
+let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(window.innerWidth!==lastW){lastW=window.innerWidth;if(stage===1)arrange()}},120)});
+go(0);
+</script>
+</body>
+</html>

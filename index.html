@@ -2,600 +2,215 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Drei Verfahren · Mathematik</title>
-<meta name="description" content="Quadratische Gleichungen üben: Wurzelziehen, Ausklammern und pq-Formel in drei Stufen.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Baloo+2:wght@600;800&display=swap">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drei Verfahren</title>
 <style>
-/* Layout: Spielbrett in einer Spalte. Oben Stufenpfad mit Sternen und Uhr, Mitte Aufgabe, unten eine feste Ablage für Karten und Auswahl.
-   Bewusst ein einziges, helles Spiel-Thema (wie ein Klassenzimmer-Lernspiel), alle Farben explizit gesetzt. */
-:root {
-  --sky: #dff1fb;
-  --sky-dots: #c7e6f6;
-  --ink: #17324d;
-  --muted: #557089;
-  --card: #ffffff;
-  --line: #b9d3e6;
-  --sun: #ffc93c;
-  --sun-deep: #e6a800;
-  --coral: #ff6b5a;
-  --coral-soft: #ffe1dc;
-  --mint: #22b07d;
-  --mint-soft: #d6f5e8;
-  --blue: #2f6fe4;
-  --blue-soft: #e2ecfd;
-  --font-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
-  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
-  color-scheme: light;
-}
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; }
-body {
-  margin: 0;
-  background-color: var(--sky);
-  background-image: radial-gradient(var(--sky-dots) 1.6px, transparent 1.7px);
-  background-size: 22px 22px;
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 17px;
-  line-height: 1.4;
-}
-button { font: inherit; color: inherit; cursor: pointer; }
-.wrap { max-width: 560px; margin: 0 auto; padding: 12px 16px 24px; display: flex; flex-direction: column; gap: 12px; min-height: 100%; }
-:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
-
-/* Kopf */
-.top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.brand { font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1; }
-.brand small { display: block; font-family: var(--font-body); font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
-.chips { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
-.chip { background: var(--card); border: 2px solid var(--line); border-radius: 999px; padding: 3px 10px; font-weight: 700; font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.chip.star { border-color: var(--sun-deep); }
-.iconbtn { background: var(--card); border: 2px solid var(--line); border-radius: 999px; padding: 3px 10px; font-weight: 700; font-size: 14px; }
-.confirm { display: flex; gap: 6px; align-items: center; font-size: 14px; font-weight: 700; }
-
-/* Stufenpfad */
-.path { display: grid; grid-template-columns: repeat(3, 1fr); position: relative; padding: 4px 0; }
-.path::before { content: ""; position: absolute; left: 16.6%; right: 16.6%; top: 28px; height: 6px; border-radius: 3px; background: var(--line); }
-.path .fill { position: absolute; left: 16.6%; top: 28px; height: 6px; border-radius: 3px; background: var(--mint); transition: width .5s ease; }
-.node { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; background: none; border: 0; padding: 0; }
-.node .dot { width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 24px; background: var(--card); border: 3px solid var(--line); color: var(--muted); }
-.node.open .dot { border-color: var(--blue); color: var(--blue); }
-.node.cur .dot { background: var(--blue); border-color: var(--blue); color: #fff; box-shadow: 0 0 0 5px var(--blue-soft); }
-.node.done .dot { background: var(--mint); border-color: var(--mint); color: #fff; }
-.node .lbl { font-size: 12px; font-weight: 700; color: var(--muted); }
-.node .stars { font-size: 13px; letter-spacing: 1px; color: var(--sun-deep); min-height: 17px; }
-.node:disabled { cursor: not-allowed; }
-
-/* Spielfläche */
-.board { background: var(--card); border-radius: 20px; padding: 16px; box-shadow: 0 4px 0 var(--line); display: flex; flex-direction: column; gap: 12px; }
-.board h2 { font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1.1; margin: 0; }
-.task { margin: 0; }
-.hintbtn { align-self: flex-start; background: var(--sun); border: 0; border-radius: 999px; padding: 6px 14px; font-weight: 700; box-shadow: 0 3px 0 var(--sun-deep); }
-.hint { margin: 0; background: #fff6d9; border: 2px dashed var(--sun-deep); border-radius: 14px; padding: 10px 12px; }
-
-/* Stufe 1 */
-.slots { display: flex; flex-direction: column; gap: 7px; }
-.srow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 8px; align-items: stretch; }
-.eq { display: flex; align-items: center; font-weight: 700; font-size: 17px; padding: 6px 10px; white-space: nowrap; border-radius: 12px; background: var(--blue-soft); }
-.slot { border: 3px dashed var(--line); border-radius: 12px; background: #f6fafd; min-height: 46px; display: flex; align-items: center; justify-content: center; padding: 4px 8px; font-size: 15px; text-align: center; color: var(--muted); }
-.slot.hover, .slot.ready { border-color: var(--blue); background: var(--blue-soft); color: var(--blue); }
-.slot.filled { border: 3px solid var(--mint); background: var(--mint-soft); color: var(--ink); font-weight: 700; animation: pop .35s; }
-.slot.wrong { border-color: var(--coral); background: var(--coral-soft); animation: shake .4s; }
-
-/* Ablage unten */
-.tray { position: sticky; bottom: 0; margin: 0 -16px; padding: 10px 16px calc(12px + env(safe-area-inset-bottom, 0px)); background: rgba(255,255,255,.96); border-top: 3px solid var(--line); border-radius: 18px 18px 0 0; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
-.tray .tlabel { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.pcard { touch-action: none; user-select: none; -webkit-user-select: none; background: var(--sun); border: 0; border-radius: 12px; padding: 10px 8px; font-weight: 700; font-size: 15px; box-shadow: 0 4px 0 var(--sun-deep); text-align: center; min-height: 48px; }
-.pcard.sel { background: var(--blue); color: #fff; box-shadow: 0 4px 0 #1d4fae; transform: translateY(-2px); }
-.pcard.ghosted { opacity: .3; }
-.pcard.wrong { background: var(--coral); color: #fff; box-shadow: 0 4px 0 #c94a3c; animation: shake .4s; }
-.ghost { position: fixed; z-index: 50; pointer-events: none; transform: translate(-50%, -60%) rotate(-3deg) scale(1.05); box-shadow: 0 10px 20px rgba(23,50,77,.25); }
-
-/* Stufe 2 und 3 */
-.calc { display: flex; flex-direction: column; gap: 8px; }
-.line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-size: 18px; font-variant-numeric: tabular-nums; padding-bottom: 8px; border-bottom: 2px dotted var(--line); }
-.line:last-child { border-bottom: 0; padding-bottom: 0; }
-.line .t { white-space: pre; }
-.line .op { margin-left: auto; color: var(--muted); white-space: nowrap; }
-.line .eqlabel { width: 100%; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-.line .eqlabel .ok { color: var(--mint); font-size: 15px; }
-.gapbtn { min-width: 58px; min-height: 42px; border-radius: 10px; border: 3px dashed var(--line); background: #f6fafd; font-weight: 700; font-size: 18px; padding: 2px 8px; color: var(--muted); }
-.gapbtn.active { border: 3px solid var(--blue); background: var(--blue-soft); color: var(--blue); }
-.gapbtn.ok { border: 3px solid var(--mint); background: var(--mint-soft); color: var(--ink); animation: pop .35s; }
-.options { display: flex; gap: 8px; flex-wrap: wrap; }
-.opt { flex: 1 1 0; min-width: 70px; background: var(--sun); border: 0; border-radius: 12px; padding: 10px 6px; font-weight: 800; font-size: 20px; box-shadow: 0 4px 0 var(--sun-deep); font-variant-numeric: tabular-nums; }
-.opt.wrong { background: var(--coral); color: #fff; box-shadow: 0 4px 0 #c94a3c; animation: shake .4s; }
-input.gap { font: inherit; font-size: 18px; font-weight: 700; width: 66px; min-height: 42px; text-align: center; border-radius: 10px; border: 3px solid var(--line); background: #f6fafd; color: var(--ink); }
-input.gap:focus { border-color: var(--blue); background: var(--card); outline: none; }
-input.gap.ok { border-color: var(--mint); background: var(--mint-soft); }
-input.gap.bad { border-color: var(--coral); background: var(--coral-soft); animation: shake .4s; }
-.big { border: 0; border-radius: 14px; padding: 12px 18px; font-family: var(--font-display); font-weight: 800; font-size: 20px; background: var(--blue); color: #fff; box-shadow: 0 5px 0 #1d4fae; }
-.big:active { transform: translateY(3px); box-shadow: 0 2px 0 #1d4fae; }
-.big.green { background: var(--mint); box-shadow: 0 5px 0 #178a60; }
-
-/* Toast */
-.toast { position: fixed; left: 50%; top: calc(14px + env(safe-area-inset-top, 0px)); transform: translate(-50%, -150%); z-index: 60; background: var(--ink); color: #fff; padding: 8px 16px; border-radius: 999px; font-weight: 700; font-size: 15px; transition: transform .25s ease; max-width: calc(100% - 32px); text-align: center; }
-.toast.show { transform: translate(-50%, 0); }
-.toast.good { background: var(--mint); }
-.toast.bad { background: var(--coral); }
-
-/* Start, Stufenabschluss, Ergebnis */
-.overlay { position: fixed; inset: 0; z-index: 40; background: rgba(23,50,77,.55); display: grid; place-items: center; padding: 16px; }
-.modal { background: var(--card); border-radius: 24px; padding: 24px 20px; width: 100%; max-width: 420px; text-align: center; display: flex; flex-direction: column; gap: 12px; animation: rise .35s ease; }
-.modal h3 { font-family: var(--font-display); font-weight: 800; font-size: 30px; line-height: 1.05; margin: 0; }
-.modal p { margin: 0; }
-.bigstars { font-size: 46px; letter-spacing: 6px; line-height: 1; }
-.bigstars span { display: inline-block; color: var(--line); }
-.bigstars span.on { color: var(--sun); animation: starpop .5s both; text-shadow: 0 3px 0 var(--sun-deep); }
-.bigstars span.on:nth-child(2) { animation-delay: .15s; }
-.bigstars span.on:nth-child(3) { animation-delay: .3s; }
-.fb { background: var(--mint-soft); border-radius: 14px; padding: 10px 12px; font-weight: 700; color: #11643f; }
-.stats { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
-.start { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 16px; text-align: center; padding-block: 12px; }
-.start h1 { font-family: var(--font-display); font-weight: 800; font-size: 40px; line-height: 1; margin: 0; text-wrap: balance; }
-.start .sub { color: var(--muted); font-weight: 700; margin: 0; }
-.levels { display: flex; flex-direction: column; gap: 8px; text-align: left; }
-.level { display: flex; align-items: center; gap: 12px; background: var(--card); border-radius: 16px; padding: 10px 14px; box-shadow: 0 3px 0 var(--line); }
-.level .num { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--blue); color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 20px; }
-.level:nth-child(2) .num { background: var(--sun-deep); }
-.level:nth-child(3) .num { background: var(--coral); }
-.level b { display: block; }
-.level span { font-size: 14px; color: var(--muted); }
-.rules { font-size: 14px; color: var(--muted); margin: 0; }
-#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 45; width: 100%; height: 100%; }
-footer { text-align: center; font-size: 12px; color: var(--muted); }
-
-@keyframes pop { 0% { transform: scale(.85); } 60% { transform: scale(1.06); } 100% { transform: scale(1); } }
-@keyframes shake { 20% { transform: translateX(-6px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
-@keyframes rise { from { transform: translateY(30px) scale(.95); opacity: .4; } to { transform: none; opacity: 1; } }
-@keyframes starpop { 0% { transform: scale(0) rotate(-30deg); } 70% { transform: scale(1.3) rotate(8deg); } 100% { transform: scale(1); } }
-@media (max-width: 370px) { .eq { font-size: 15px; padding: 6px 8px; } .pcard, .slot { font-size: 14px; } .start h1 { font-size: 34px; } }
-@media (prefers-reduced-motion: reduce) { *, *::before { animation: none !important; transition: none !important; } }
+:root{--blue:#2a7ab9;--blue-dark:#1f5f91;--bg:#eef3f7;--tile:#ffffff;--line:#c9d6e2;--ink:#1d2a36;--muted:#5b6b7a;--ok:#2e9e5b;--ok-bg:#e3f5ea;--bad:#d6453d;--bad-bg:#fbe5e3;--sel:#ffd84d;--sel-bg:#fff7d1}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:1.4}
+header{background:var(--blue);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:5}
+header h1{margin:0;font-size:19px;font-weight:bold}
+header .stufe{font-size:14px;background:rgba(255,255,255,.2);border-radius:14px;padding:3px 10px;white-space:nowrap}
+main{max-width:640px;margin:0 auto;padding:12px 12px 130px}
+.task{background:var(--tile);border:1px solid var(--line);border-radius:8px;padding:10px 12px 10px 44px;position:relative;margin-bottom:12px;font-size:17px}
+.task::before{content:"i";position:absolute;left:12px;top:9px;width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;font-weight:bold;text-align:center;line-height:24px;font-family:Georgia,serif}
+.screen{display:none}.screen.on{display:block}
+/* Paare */
+#board{position:relative;background:var(--tile);border:1px solid var(--line);border-radius:8px;touch-action:pan-y;overflow:hidden;user-select:none;-webkit-user-select:none}
+.card,.slot{position:absolute;left:0;top:0;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:17px;white-space:nowrap;will-change:transform}
+.card{background:#fff;border:2px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.15);cursor:grab;touch-action:none}
+.card.q{background:#f0f6fc;cursor:default;border-radius:8px 0 0 8px}
+.slot{border:2px dashed #b7c6d4;color:#9aabba;font-size:13px;border-radius:0 8px 8px 0}
+.card.drag{z-index:20;box-shadow:0 6px 14px rgba(0,0,0,.25);border-color:var(--blue);transform-origin:center}
+.card.snap{border-radius:0 8px 8px 0;border-left-width:1px}
+.card.ok{border-color:var(--ok);background:var(--ok-bg)}
+.card.bad{border-color:var(--bad);background:var(--bad-bg)}
+.poolline{position:absolute;left:8px;right:8px;border-top:1px dashed var(--line)}
+/* Lückentext */
+.text{background:var(--tile);border:1px solid var(--line);border-radius:8px;padding:12px}
+.line{padding:8px 4px;border-bottom:1px dashed var(--line);font-size:20px;line-height:2}
+.line .eq{display:block;font-weight:bold;line-height:1.5;margin-bottom:2px}
+.line:last-child{border-bottom:0}
+.line .r{color:var(--muted);font-size:16px;margin-left:10px}
+select,input{font:inherit;font-size:18px;border:2px solid var(--line);border-radius:6px;background:#fff;padding:4px 4px;margin:2px 1px;color:var(--ink)}
+input{width:3.4em;text-align:center}
+select.ok,input.ok{border-color:var(--ok);background:var(--ok-bg)}
+select.bad,input.bad{border-color:var(--bad);background:var(--bad-bg)}
+/* Leiste */
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:8px 12px 10px;z-index:5}
+.bar .fb{font-size:16px;min-height:22px;margin-bottom:6px;text-align:center}
+.bar .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.fb.ok{color:var(--ok);font-weight:bold}.fb.bad{color:var(--bad);font-weight:bold}
+button{font:inherit;cursor:pointer;border:0;border-radius:24px;padding:11px 18px;font-size:17px;font-weight:bold}
+.check{background:var(--blue);color:#fff}
+.check:active{background:var(--blue-dark)}
+.help{background:#fff;color:var(--blue);border:2px solid var(--blue);width:44px;height:44px;border-radius:50%;padding:0;font-size:22px;flex:none}
+.next{background:var(--ok);color:#fff;display:none}
+.helpbox{display:none;background:#fff8e1;border:1px solid #ffd54f;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:16px}
+.helpbox.on{display:block}
+.final{text-align:center;padding:30px 10px}
+.final .big{font-size:40px}
+.final h2{color:var(--ok);margin:10px 0}
+.final p{color:var(--muted)}
 </style>
 </head>
 <body>
+<header><h1>Drei Verfahren</h1><span class="stufe" id="stufe">Stufe 1 von 3</span></header>
+<main>
 
-<canvas id="confetti" hidden></canvas>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-<div class="wrap" id="app"></div>
+<!-- Stufe 1: Paare zuordnen -->
+<section class="screen on" id="s1">
+  <div class="task">Ordnen Sie jeder Gleichung ihre Lösungen zu: Lösung mit dem Finger neben die Gleichung ziehen.</div>
+  <div class="helpbox" id="h1">Nur x² und eine Zahl: Wurzelziehen. x² und x ohne Zahl: Ausklammern. x², x und Zahl: pq-Formel.</div>
+  <div id="board"></div>
+  <div class="hint">Zum Ändern eine Lösung einfach wieder wegziehen.</div>
+</section>
+
+<!-- Stufe 2: Auswahl aus Liste -->
+<section class="screen" id="s2">
+  <div class="task">Bringen Sie die Gleichung in die Normalform und lösen Sie mit der pq-Formel. Wählen Sie die passenden Zahlen.</div>
+  <div class="helpbox" id="h2">Rechts 0, dann durch die Zahl vor x² teilen, auch die Zahl ohne x. p und q mit Vorzeichen.</div>
+  <div class="text" id="t2">
+    <div class="line">3x² + 12x = 15 <span class="r">| − 15</span></div>
+    <div class="line">3x² + 12x − 15 = 0 <span class="r">| : 3</span></div>
+    <div class="line">x² + <select data-a="4"><option value="">?</option><option>12</option><option>4</option><option>3</option></select> x <select data-a="− 5"><option value="">?</option><option>− 15</option><option>+ 5</option><option>− 5</option></select> = 0</div>
+    <div class="line">p = <select data-a="4"><option value="">?</option><option>−4</option><option>4</option><option>12</option></select> &nbsp; q = <select data-a="−5"><option value="">?</option><option>5</option><option>−5</option><option>−15</option></select></div>
+    <div class="line">x₁,₂ = <select data-a="−2"><option value="">?</option><option>2</option><option>−4</option><option>−2</option></select> ± √(<select data-a="4"><option value="">?</option><option>4</option><option>2</option><option>16</option></select> − (<select data-a="−5"><option value="">?</option><option>−15</option><option>5</option><option>−5</option></select>))</div>
+    <div class="line">x₁,₂ = −2 ± <select data-a="3"><option value="">?</option><option>9</option><option>3</option><option>1</option></select></div>
+    <div class="line">x₁ = <select data-a="1"><option value="">?</option><option>5</option><option>−1</option><option>1</option></select> &nbsp; x₂ = <select data-a="−5"><option value="">?</option><option>−1</option><option>−5</option><option>1</option></select></div>
+  </div>
+</section>
+
+<!-- Stufe 3: Einschreiben -->
+<section class="screen" id="s3">
+  <div class="task">Lösen Sie jede Gleichung mit dem passenden Verfahren. Schreiben Sie die Lösungen ein (negative Zahlen mit Minus, zum Beispiel −3).</div>
+  <div class="helpbox" id="h3">Bei x² − 6x = 0 nicht durch x teilen. Bei der pq-Formel: −p/2 ± √((p/2)² − q), hier −1 ± √(1 + 8) = −1 ± 3.</div>
+  <div class="text" id="t3">
+    <div class="line"><span class="eq">x² = 81</span>x₁ = <input data-set="a" data-a="9"> &nbsp; x₂ = <input data-set="a" data-a="-9"></div>
+    <div class="line"><span class="eq">x² − 6x = 0</span>x · (x − <input data-a="6">) = 0<br>x₁ = <input data-set="b" data-a="0"> &nbsp; x₂ = <input data-set="b" data-a="6"></div>
+    <div class="line"><span class="eq">x² + 2x − 8 = 0</span>p = <input data-a="2"> &nbsp; q = <input data-a="-8"><br>x₁ = <input data-set="c" data-a="2"> &nbsp; x₂ = <input data-set="c" data-a="-4"></div>
+    <div class="line"><span class="eq">4x² = 100</span>x₁ = <input data-set="d" data-a="5"> &nbsp; x₂ = <input data-set="d" data-a="-5"></div>
+  </div>
+</section>
+
+<!-- Ende -->
+<section class="screen" id="s4">
+  <div class="final"><div class="big">★ ★ ★</div><h2>Alle drei Stufen geschafft!</h2><p>Wurzelziehen, Ausklammern, pq-Formel: Das Kennzeichen entscheidet.</p><button class="check" onclick="location.reload()">Noch einmal</button></div>
+</section>
+</main>
+
+<div class="bar" id="bar">
+  <div class="fb" id="fb"></div>
+  <div class="row">
+    <button class="help" id="helpbtn" title="Hilfe">?</button>
+    <button class="check" id="checkbtn">Lösung überprüfen</button>
+    <button class="next" id="nextbtn">Weiter ›</button>
+  </div>
+</div>
 
 <script>
-(function () {
-  "use strict";
-  var M = "−"; // echtes Minuszeichen
-
-  // ---------- Inhalte (aus LearningApps_Einstiegsspiel_2026-10-12.md) ----------
-  var STAGE1 = [
-    ["x² = 36", "x = 6 oder x = " + M + "6"],
-    ["2x² = 50", "x = 5 oder x = " + M + "5"],
-    ["x² " + M + " 5x = 0", "x = 0 oder x = 5"],
-    ["x² + 3x = 0", "x = 0 oder x = " + M + "3"],
-    ["x² + 6x + 8 = 0", "x = " + M + "2 oder x = " + M + "4"],
-    ["x² " + M + " 2x " + M + " 15 = 0", "x = 5 oder x = " + M + "3"]
-  ];
-  function G(opts) { return { g: opts }; } // richtige Antwort zuerst
-  var STAGE2 = [
-    { parts: ["3x² + 12x = 15"], op: "| " + M + " 15" },
-    { parts: ["3x² + 12x " + M + " 15 = 0"], op: "| : 3" },
-    { parts: ["x² +", G(["4", "12", "3"]), "x", G([M + " 5", M + " 15", "+ 5"]), "= 0"] },
-    { parts: ["p =", G(["4", "12", M + "4"]), "   q =", G([M + "5", "5", M + "15"])] },
-    { parts: ["x₁,₂ =", G([M + "2", "2", M + "4"]), "± √(", G(["4", "2", "16"]), M + " (", G([M + "5", "5", M + "15"]), ") )"] },
-    { parts: ["x₁,₂ = " + M + "2 ±", G(["3", "9", "1"])] },
-    { parts: ["x₁ =", G(["1", "5", M + "1"]), "   x₂ =", G([M + "5", M + "1", "1"])] }
-  ];
-  function I(ans, pair) { return { i: ans, pair: pair || null }; } // pair: Reihenfolge egal
-  var STAGE3 = [
-    { label: "x² = 81", parts: ["x₁ =", I(9, "a"), "   x₂ =", I(-9, "a")] },
-    { label: "x² " + M + " 6x = 0", parts: ["x · (x " + M, I(6), ") = 0", "   x₁ =", I(0, "b"), "   x₂ =", I(6, "b")] },
-    { label: "x² + 2x " + M + " 8 = 0", parts: ["p =", I(2), "   q =", I(-8), "   x₁ =", I(2, "c"), "   x₂ =", I(-4, "c")] },
-    { label: "4x² = 100", parts: ["x₁ =", I(5, "d"), "   x₂ =", I(-5, "d")] }
-  ];
-  var TEXT = {
-    t1: "Ordnen Sie jeder Gleichung ihre Lösungen zu.",
-    ok1: "Richtig. Wurzelziehen, Ausklammern oder pq-Formel: Das Kennzeichen entscheidet.",
-    h1: "Nur x² und eine Zahl: Wurzelziehen. x² und x ohne Zahl: Ausklammern. x², x und Zahl: pq-Formel.",
-    t2: "Bringen Sie die Gleichung in die Normalform und lösen Sie mit der pq-Formel. Wählen Sie die passenden Zahlen.",
-    ok2: "Richtig. x₁ = 1 und x₂ = " + M + "5.",
-    h2: "Rechts 0, dann durch die Zahl vor x² teilen, auch die Zahl ohne x. p und q mit Vorzeichen.",
-    t3: "Lösen Sie jede Gleichung mit dem passenden Verfahren. Schreiben Sie die Lösungen ein (negative Zahlen mit Minus, zum Beispiel " + M + "3).",
-    ok3: "Richtig. Alle vier Gleichungen sind gelöst.",
-    h3: "Bei x² " + M + " 6x = 0 nicht durch x teilen. Bei der pq-Formel: " + M + "p/2 ± √((p/2)² " + M + " q), hier " + M + "1 ± √(1 + 8) = " + M + "1 ± 3."
-  };
-  var NAMES = ["Paare zuordnen", "Auswahl", "Einschreiben"];
-  var GAPS2 = [];
-  STAGE2.forEach(function (l, li) { l.parts.forEach(function (p, pi) { if (p.g) GAPS2.push(li + "-" + pi); }); });
-
-  // ---------- Zustand ----------
-  var S, timer = null;
-  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
-  function fresh() {
-    var order = shuffle([0, 1, 2, 3, 4, 5]);
-    var opts = {};
-    STAGE2.forEach(function (l, li) { l.parts.forEach(function (p, pi) { if (p.g) opts[li + "-" + pi] = shuffle(p.g); }); });
-    return {
-      screen: "start", cur: 0, done: [false, false, false], stars: [0, 0, 0], miss: [0, 0, 0],
-      t0: 0, tEnd: 0, help: false, confirming: false, modal: null,
-      s1: { order: order, matched: {}, sel: null },
-      s2: { opts: opts, ok: {}, active: GAPS2[0] },
-      s3: { vals: {}, ok: {} }
-    };
-  }
-  function starsFor(m) { return m === 0 ? 3 : m <= 2 ? 2 : 1; }
-  function totalStars() { return S.stars[0] + S.stars[1] + S.stars[2]; }
-  function elapsed() { var end = S.tEnd || Date.now(); return S.t0 ? Math.floor((end - S.t0) / 1000) : 0; }
-  function fmt(sec) { var m = Math.floor(sec / 60), s = sec % 60; return m + ":" + (s < 10 ? "0" : "") + s; }
-
-  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
-
-  var toastTimer;
-  function toast(msg, kind) {
-    var t = document.getElementById("toast");
-    t.textContent = msg; t.className = "toast show " + (kind || "");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { t.className = "toast " + (kind || ""); }, 1600);
-  }
-  function shakeEl(e) { if (!e) return; e.classList.remove("wrong"); void e.offsetWidth; e.classList.add("wrong"); setTimeout(function () { e.classList.remove("wrong"); }, 600); }
-
-  // ---------- Konfetti ----------
-  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  function confetti() {
-    if (reduce) return;
-    var c = document.getElementById("confetti"), ctx = c.getContext("2d");
-    c.hidden = false; c.width = innerWidth * devicePixelRatio; c.height = innerHeight * devicePixelRatio;
-    ctx.scale(devicePixelRatio, devicePixelRatio);
-    var cols = ["#ffc93c", "#ff6b5a", "#22b07d", "#2f6fe4", "#8fd3ff"], P = [];
-    for (var i = 0; i < 120; i++) P.push({ x: innerWidth / 2, y: innerHeight * 0.35, vx: (Math.random() - .5) * 12, vy: -Math.random() * 12 - 3, r: Math.random() * 6 + 4, c: cols[i % 5], a: Math.random() * 6, va: (Math.random() - .5) * .4 });
-    var start = performance.now();
-    (function frame(now) {
-      ctx.clearRect(0, 0, innerWidth, innerHeight);
-      P.forEach(function (p) { p.vy += .35; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.a += p.va; ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.r / 2, -p.r / 4, p.r, p.r / 2); ctx.restore(); });
-      if (now - start < 2200) requestAnimationFrame(frame); else { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, c.width, c.height); c.hidden = true; }
-    })(start);
-  }
-
-  // ---------- Rahmen ----------
-  function render() {
-    var app = document.getElementById("app");
-    app.innerHTML = "";
-    if (S.screen === "start") { renderStart(app); return; }
-    app.appendChild(renderTop());
-    app.appendChild(renderPath());
-    if (S.screen === "end") renderEnd(app);
-    else if (S.cur === 0) renderStage1(app);
-    else if (S.cur === 1) renderStage2(app);
-    else renderStage3(app);
-    if (S.modal) renderModal();
-  }
-  function renderTop() {
-    var top = el("div", "top");
-    var b = el("div", "brand"); b.appendChild(el("small", null, "Drei Verfahren")); b.appendChild(document.createTextNode("Einstiegsspiel")); top.appendChild(b);
-    var chips = el("div", "chips");
-    if (!S.confirming) {
-      chips.appendChild(el("span", "chip star", "★ " + totalStars() + "/9"));
-      var clock = el("span", "chip", "⏱ " + fmt(elapsed())); clock.id = "clock"; chips.appendChild(clock);
-      var r = el("button", "iconbtn", "↺"); r.id = "restart"; r.setAttribute("aria-label", "Neustart");
-      r.onclick = function () { S.confirming = true; render(); };
-      chips.appendChild(r);
-    } else {
-      var c = el("div", "confirm"); c.appendChild(el("span", null, "Neu starten?"));
-      var y = el("button", "iconbtn", "Ja"); y.id = "restartYes"; y.onclick = function () { S = fresh(); render(); };
-      var n = el("button", "iconbtn", "Nein"); n.onclick = function () { S.confirming = false; render(); };
-      c.appendChild(y); c.appendChild(n); chips.appendChild(c);
-    }
-    top.appendChild(chips);
-    return top;
-  }
-  function renderPath() {
-    var path = el("nav", "path"); path.setAttribute("aria-label", "Stufen");
-    var fill = el("div", "fill"); var doneCount = S.done.filter(Boolean).length;
-    fill.style.width = (Math.min(doneCount, 2) / 2 * 66.8) + "%";
-    path.appendChild(fill);
-    for (var i = 0; i < 3; i++) (function (i) {
-      var open = i === 0 || S.done[i - 1];
-      var n = el("button", "node" + (open ? " open" : "") + (S.done[i] ? " done" : "") + (S.screen === "play" && S.cur === i ? " cur" : ""));
-      n.id = "node" + (i + 1); n.disabled = !open;
-      n.appendChild(el("span", "dot", S.done[i] ? "✓" : open ? String(i + 1) : "🔒"));
-      n.appendChild(el("span", "lbl", NAMES[i]));
-      n.appendChild(el("span", "stars", S.done[i] ? "★★★".slice(0, S.stars[i]) + "☆☆☆".slice(0, 3 - S.stars[i]) : ""));
-      n.onclick = function () { S.screen = "play"; S.cur = i; S.help = false; render(); };
-      path.appendChild(n);
-    })(i);
-    return path;
-  }
-  function boardHead(board, title, task, hintText) {
-    board.appendChild(el("h2", null, title));
-    board.appendChild(el("p", "task", task));
-    var hb = el("button", "hintbtn", S.help ? "Hilfe ausblenden" : "💡 Hilfe");
-    hb.onclick = function () { S.help = !S.help; render(); };
-    board.appendChild(hb);
-    if (S.help) board.appendChild(el("p", "hint", hintText));
-  }
-  function finishStage(i, msg) {
-    S.done[i] = true; S.stars[i] = starsFor(S.miss[i]);
-    if (i === 2) S.tEnd = Date.now();
-    S.modal = { stage: i, msg: msg };
-    render(); confetti();
-  }
-  function renderModal() {
-    var m = S.modal, ov = el("div", "overlay"), box = el("div", "modal");
-    box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true");
-    box.appendChild(el("h3", null, "Stufe " + (m.stage + 1) + " geschafft!"));
-    var st = el("div", "bigstars"); st.setAttribute("aria-label", S.stars[m.stage] + " von 3 Sternen");
-    for (var k = 0; k < 3; k++) st.appendChild(el("span", k < S.stars[m.stage] ? "on" : null, "★"));
-    box.appendChild(st);
-    box.appendChild(el("p", "fb", m.msg));
-    box.appendChild(el("p", "rules", S.miss[m.stage] === 0 ? "Ohne Fehler!" : S.miss[m.stage] + (S.miss[m.stage] === 1 ? " Fehlversuch" : " Fehlversuche")));
-    var go = el("button", "big green", m.stage < 2 ? "Weiter zu Stufe " + (m.stage + 2) : "Zum Ergebnis");
-    go.id = "next";
-    go.onclick = function () { S.modal = null; S.help = false; if (m.stage < 2) S.cur = m.stage + 1; else S.screen = "end"; render(); window.scrollTo(0, 0); if (m.stage === 2) confetti(); };
-    box.appendChild(go);
-    ov.appendChild(box); document.getElementById("app").appendChild(ov);
-    setTimeout(function () { go.focus(); }, 50);
-  }
-
-  // ---------- Start ----------
-  function renderStart(app) {
-    var s = el("div", "start");
-    s.appendChild(el("p", "sub", "Quadratische Gleichungen"));
-    s.appendChild(el("h1", null, "Drei Verfahren"));
-    s.appendChild(el("p", "sub", "Wurzelziehen · Ausklammern · pq-Formel"));
-    var lv = el("div", "levels");
-    [["Paare zuordnen", "Karten auf die passende Gleichung ziehen"], ["Auswahl", "Die richtige Zahl in jede Lücke wählen"], ["Einschreiben", "Lösungen selbst eintippen"]].forEach(function (l, i) {
-      var r = el("div", "level"); r.appendChild(el("span", "num", String(i + 1)));
-      var d = el("div"); d.appendChild(el("b", null, "Stufe " + (i + 1) + " · " + l[0])); d.appendChild(el("span", null, l[1])); r.appendChild(d); lv.appendChild(r);
-    });
-    s.appendChild(lv);
-    s.appendChild(el("p", "rules", "⏱ Insgesamt 5 Minuten. Arbeiten Sie in Ihrem Tempo. Sie müssen nicht alle Stufen schaffen. Stoppen Sie beim Signal der Lehrkraft."));
-    s.appendChild(el("p", "rules", "Jede Stufe schaltet die nächste frei. Bis zu 3 Sterne pro Stufe: ohne Fehler 3, mit 1 bis 2 Fehlern 2, sonst 1."));
-    var go = el("button", "big", "Los geht’s"); go.id = "start";
-    go.onclick = function () { S.screen = "play"; S.t0 = Date.now(); render(); };
-    s.appendChild(go);
-    s.appendChild(el("footer", null, "Keine Anmeldung, es wird nichts gespeichert."));
-    app.appendChild(s);
-  }
-
-  // ---------- Stufe 1: Ziehen oder Antippen ----------
-  function renderStage1(app) {
-    var s = S.s1, board = el("section", "board");
-    boardHead(board, "Stufe 1 · Paare zuordnen", TEXT.t1, TEXT.h1);
-    var slots = el("div", "slots");
-    STAGE1.forEach(function (p, i) {
-      var row = el("div", "srow");
-      row.appendChild(el("div", "eq", p[0]));
-      var sl = el("button", "slot");
-      sl.id = "slot" + i; sl.dataset.slot = i;
-      if (s.matched[i]) { sl.classList.add("filled"); sl.textContent = p[1]; sl.disabled = true; }
-      else { sl.textContent = s.sel != null ? "hier ablegen" : "Karte hierher"; if (s.sel != null) sl.classList.add("ready"); }
-      sl.onclick = function () { if (s.sel != null) attempt(s.sel, i); };
-      row.appendChild(sl); slots.appendChild(row);
-    });
-    board.appendChild(slots);
-    app.appendChild(board);
-
-    var tray = el("div", "tray");
-    tray.appendChild(el("div", "tlabel", "Lösungskarten · ziehen oder antippen"));
-    var cards = el("div", "cards");
-    s.order.forEach(function (i) {
-      if (s.matched[i]) return;
-      var c = el("button", "pcard" + (s.sel === i ? " sel" : ""), STAGE1[i][1]);
-      c.id = "card" + i; c.dataset.card = i;
-      bindDrag(c, i);
-      cards.appendChild(c);
-    });
-    tray.appendChild(cards);
-    app.appendChild(tray);
-  }
-  function attempt(cardIdx, slotIdx) {
-    var s = S.s1;
-    if (cardIdx === slotIdx) {
-      s.matched[slotIdx] = true; s.sel = null;
-      var left = 6 - Object.keys(s.matched).length;
-      if (left === 0) { finishStage(0, TEXT.ok1); return; }
-      render(); toast(["Super!", "Richtig!", "Stark!", "Genau!"][left % 4], "good");
-    } else {
-      S.miss[0]++; s.sel = null; render();
-      shakeEl(document.getElementById("slot" + slotIdx));
-      shakeEl(document.getElementById("card" + cardIdx));
-      toast("Passt nicht. Achten Sie auf das Kennzeichen.", "bad");
-    }
-  }
-  function bindDrag(card, idx) {
-    var start = null, ghost = null, hover = null;
-    card.addEventListener("pointerdown", function (e) {
-      if (e.button > 0) return;
-      start = { x: e.clientX, y: e.clientY, id: e.pointerId };
-      try { card.setPointerCapture(e.pointerId); } catch (_) {}
-    });
-    card.addEventListener("pointermove", function (e) {
-      if (!start || e.pointerId !== start.id) return;
-      if (!ghost && Math.hypot(e.clientX - start.x, e.clientY - start.y) > 8) {
-        ghost = card.cloneNode(true); ghost.removeAttribute("id"); ghost.classList.add("ghost"); ghost.classList.remove("sel");
-        ghost.style.width = card.offsetWidth + "px";
-        document.body.appendChild(ghost); card.classList.add("ghosted");
-      }
-      if (ghost) {
-        ghost.style.left = e.clientX + "px"; ghost.style.top = e.clientY + "px";
-        var under = document.elementFromPoint(e.clientX, e.clientY);
-        var sl = under && under.closest ? under.closest(".slot:not(.filled)") : null;
-        if (hover && hover !== sl) hover.classList.remove("hover");
-        if (sl) sl.classList.add("hover");
-        hover = sl;
-        // am Rand mitscrollen
-        var tr = document.querySelector(".tray"), trTop = tr ? tr.getBoundingClientRect().top : innerHeight;
-        if (e.clientY < 70) window.scrollBy(0, -12); else if (e.clientY > trTop - 30 && !(under && under.closest && under.closest(".cards"))) window.scrollBy(0, 12);
-      }
-    });
-    function end(e, cancelled) {
-      if (!start) return;
-      var wasDrag = !!ghost;
-      if (ghost) { ghost.remove(); ghost = null; card.classList.remove("ghosted"); }
-      if (hover) hover.classList.remove("hover");
-      var target = hover; hover = null; start = null;
-      if (cancelled) return;
-      if (wasDrag) { if (target) attempt(idx, Number(target.dataset.slot)); }
-      else { S.s1.sel = S.s1.sel === idx ? null : idx; render(); }
-    }
-    card.addEventListener("pointerup", function (e) { end(e, false); });
-    card.addEventListener("pointercancel", function (e) { end(e, true); });
-    card.addEventListener("click", function (e) { e.preventDefault(); });
-    card.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); S.s1.sel = S.s1.sel === idx ? null : idx; render(); var sl = document.querySelector(".slot:not(.filled)"); if (sl) sl.focus(); } });
-  }
-
-  // ---------- Stufe 2: Lücke antippen, Zahl wählen ----------
-  function renderStage2(app) {
-    var s = S.s2, board = el("section", "board");
-    boardHead(board, "Stufe 2 · Auswahl", TEXT.t2, TEXT.h2);
-    var calc = el("div", "calc");
-    STAGE2.forEach(function (line, li) {
-      var row = el("div", "line");
-      line.parts.forEach(function (p, pi) {
-        if (typeof p === "string") { row.appendChild(el("span", "t", p)); return; }
-        var key = li + "-" + pi;
-        var b = el("button", "gapbtn" + (s.ok[key] ? " ok" : s.active === key ? " active" : ""), s.ok[key] ? p.g[0] : "?");
-        b.id = "g" + key; b.setAttribute("aria-label", s.ok[key] ? "Lücke: " + p.g[0] : "Lücke wählen");
-        if (s.ok[key]) b.disabled = true;
-        b.onclick = function () { s.active = key; render(); };
-        row.appendChild(b);
-      });
-      if (line.op) row.appendChild(el("span", "op", line.op));
-      calc.appendChild(row);
-    });
-    board.appendChild(calc);
-    app.appendChild(board);
-
-    if (s.active) {
-      var parts = s.active.split("-"), gap = STAGE2[+parts[0]].parts[+parts[1]];
-      var tray = el("div", "tray");
-      tray.appendChild(el("div", "tlabel", "Lücke " + (GAPS2.indexOf(s.active) + 1) + " von " + GAPS2.length + " · Zahl wählen"));
-      var row = el("div", "options");
-      s.opts[s.active].forEach(function (v, k) {
-        var o = el("button", "opt", v); o.id = "opt" + k;
-        o.onclick = function () {
-          if (v === gap.g[0]) {
-            s.ok[s.active] = true;
-            var next = GAPS2.filter(function (g) { return !s.ok[g]; });
-            s.active = next.length ? (next.filter(function (g) { return GAPS2.indexOf(g) > GAPS2.indexOf(s.active); })[0] || next[0]) : null;
-            if (!s.active) { finishStage(1, TEXT.ok2); return; }
-            render(); toast("Richtig!", "good");
-            var ag = document.getElementById("g" + s.active), tr = document.querySelector(".tray");
-            if (ag && tr) { var d = ag.getBoundingClientRect().bottom - tr.getBoundingClientRect().top + 16; if (d > 0) window.scrollBy({ top: d, behavior: reduce ? "auto" : "smooth" }); }
-          } else { S.miss[1]++; shakeEl(o); toast("Noch nicht. Versuchen Sie es noch einmal.", "bad"); }
-        };
-        row.appendChild(o);
-      });
-      tray.appendChild(row);
-      app.appendChild(tray);
-    }
-  }
-
-  // ---------- Stufe 3: Einschreiben ----------
-  function parseNum(v) {
-    if (v == null) return NaN;
-    var t = String(v).replace(/[−–—]/g, "-").replace(/\s+/g, "").replace(/^x[₁₂12]?=/i, "").replace(",", ".");
-    if (t === "" || !/^[+-]?\d+(\.\d+)?$/.test(t)) return NaN;
-    return Number(t);
-  }
-  function grade3() {
-    var s = S.s3, res = {};
-    STAGE3.forEach(function (line, li) {
-      var groups = {};
-      line.parts.forEach(function (p, pi) {
-        if (typeof p === "string") return;
-        var key = li + "-" + pi, v = parseNum(s.vals[key]);
-        if (p.pair) (groups[p.pair] = groups[p.pair] || []).push({ key: key, ans: p.i, v: v });
-        else res[key] = v === p.i;
-      });
-      Object.keys(groups).forEach(function (g) {
-        var entries = groups[g].slice().sort(function (a, b) {
-          return Number(!!s.ok[b.key]) - Number(!!s.ok[a.key]);
-        });
-        var remaining = groups[g].map(function (p) { return p.ans; });
-        entries.forEach(function (p) {
-          var match = remaining.indexOf(p.v);
-          res[p.key] = match !== -1;
-          if (match !== -1) remaining.splice(match, 1);
-        });
-      });
-    });
-    return res;
-  }
-  function renderStage3(app) {
-    var s = S.s3, board = el("section", "board");
-    boardHead(board, "Stufe 3 · Einschreiben", TEXT.t3, TEXT.h3);
-    var calc = el("div", "calc");
-    STAGE3.forEach(function (line, li) {
-      var row = el("div", "line");
-      var lab = el("span", "eqlabel", line.label);
-      var allOk = line.parts.every(function (p, pi) { return typeof p === "string" || s.ok[li + "-" + pi]; });
-      if (allOk) lab.appendChild(el("span", "ok", "✓ gelöst"));
-      row.appendChild(lab);
-      line.parts.forEach(function (p, pi) {
-        if (typeof p === "string") { row.appendChild(el("span", "t", p)); return; }
-        var key = li + "-" + pi, inp = el("input", "gap");
-        inp.id = "i" + key; inp.type = "text";
-        ["autocomplete", "off", "autocorrect", "off", "autocapitalize", "off", "spellcheck", "false", "enterkeyhint", "next", "aria-label", "Lücke"].forEach(function (v, k, a) { if (k % 2 === 0) inp.setAttribute(v, a[k + 1]); });
-        inp.value = s.vals[key] || "";
-        if (s.ok[key]) { inp.classList.add("ok"); inp.readOnly = true; }
-        else if (s.bad && s.bad[key]) inp.classList.add("bad");
-        inp.oninput = function () { s.vals[key] = inp.value; inp.classList.remove("bad"); };
-        inp.onkeydown = function (e) { if (e.key === "Enter") { e.preventDefault(); var all = [].slice.call(document.querySelectorAll("input.gap:not([readonly])")); var n = all[all.indexOf(inp) + 1]; if (n) n.focus(); else check3(); } };
-        row.appendChild(inp);
-      });
-      calc.appendChild(row);
-    });
-    board.appendChild(calc);
-    var chk = el("button", "big", "Prüfen"); chk.id = "check3"; chk.onclick = check3;
-    board.appendChild(chk);
-    app.appendChild(board);
-  }
-  function check3() {
-    var s = S.s3, r = grade3(), wrong = 0, newly = 0; s.bad = {};
-    Object.keys(r).forEach(function (k) {
-      if (s.ok[k]) return;
-      if (r[k]) { s.ok[k] = true; newly++; } else { s.bad[k] = true; wrong++; }
-    });
-    var filledWrong = Object.keys(s.bad).filter(function (k) { return (s.vals[k] || "").trim() !== ""; }).length;
-    S.miss[2] += filledWrong;
-    if (wrong === 0) { finishStage(2, TEXT.ok3); return; }
-    render();
-    var total = Object.keys(r).length, right = total - wrong;
-    toast(right + " von " + total + " richtig. Die roten Felder noch einmal.", "bad");
-  }
-
-  // ---------- Ergebnis ----------
-  function renderEnd(app) {
-    var board = el("section", "board"); board.style.textAlign = "center";
-    board.appendChild(el("div", "bigstars", "🏆"));
-    board.appendChild(el("h2", null, "Alle drei Stufen geschafft!"));
-    var st = el("div", "bigstars");
-    for (var k = 0; k < 9; k++) st.appendChild(el("span", k < totalStars() ? "on" : null, "★"));
-    st.style.fontSize = "28px"; st.style.letterSpacing = "2px";
-    board.appendChild(st);
-    var stats = el("div", "stats");
-    stats.appendChild(el("span", "chip star", "★ " + totalStars() + " von 9 Sternen"));
-    stats.appendChild(el("span", "chip", "⏱ " + fmt(elapsed())));
-    var miss = S.miss[0] + S.miss[1] + S.miss[2];
-    stats.appendChild(el("span", "chip", miss === 0 ? "ohne Fehler" : miss + " Fehlversuche"));
-    board.appendChild(stats);
-    board.appendChild(el("p", "fb", "Wurzelziehen, Ausklammern oder pq-Formel: Das Kennzeichen entscheidet."));
-    board.appendChild(el("p", "task", "Legen Sie jetzt Ihr Handy ab."));
-    var again = el("button", "big", "Nochmal spielen"); again.onclick = function () { S = fresh(); render(); };
-    board.appendChild(again);
-    app.appendChild(board);
-  }
-
-  // Uhr im Kopf aktualisieren, ohne neu zu zeichnen
-  setInterval(function () { var c = document.getElementById("clock"); if (c && S.screen !== "start") c.textContent = "⏱ " + fmt(elapsed()); }, 1000);
-
-  S = fresh();
-  render();
-})();
+var PAIRS=[["x² = 36","x = 6 oder x = −6"],["2x² = 50","x = 5 oder x = −5"],["x² − 5x = 0","x = 0 oder x = 5"],["x² + 3x = 0","x = 0 oder x = −3"],["x² + 6x + 8 = 0","x = −2 oder x = −4"],["x² − 2x − 15 = 0","x = 5 oder x = −3"]];
+var stage=1;
+var $=function(id){return document.getElementById(id)};
+function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+/* Stufe 1: Gleichungen links fest, Lösungen aus dem Vorrat daneben ziehen (Pointer Events, touch-action:none: die Seite scrollt beim Ziehen nicht) */
+var board=$("board"), qs=[], ans=[], drag=null, CW=0, CH=44, GAP=6, POOLY=0;
+function buildCards(){
+  var W=board.clientWidth; CW=Math.floor((W-3*GAP)/2);
+  board.innerHTML='';qs=[];ans=[];
+  PAIRS.forEach(function(p,i){
+    var y=GAP+i*(CH+GAP);
+    var q=document.createElement('div');q.className='card q';q.textContent=p[0];q.style.width=CW+'px';q.style.transform='translate('+GAP+'px,'+y+'px)';board.appendChild(q);
+    var sl=document.createElement('div');sl.className='slot';sl.textContent='Lösung hierher';sl.style.width=CW+'px';sl.style.transform='translate('+(GAP+CW)+'px,'+y+'px)';board.appendChild(sl);
+    qs.push({el:q,slot:sl,k:i,x:GAP+CW,y:y,ans:null});
+  });
+  POOLY=GAP+PAIRS.length*(CH+GAP)+12;
+  var line=document.createElement('div');line.className='poolline';line.style.top=(POOLY-10)+'px';board.appendChild(line);
+  var items=PAIRS.map(function(p,i){return {t:p[1],k:i}});shuffle(items);
+  items.forEach(function(it,n){
+    var d=document.createElement('div');d.className='card';d.textContent=it.t;d.style.width=CW+'px';
+    var c={el:d,k:it.k,hx:GAP+(n%2)*(CW+GAP),hy:POOLY+Math.floor(n/2)*(CH+GAP),x:0,y:0,at:null};
+    c.x=c.hx;c.y=c.hy;place(c);d.addEventListener('pointerdown',function(e){down(e,c)});board.appendChild(d);ans.push(c);
+  });
+  board.style.height=(POOLY+Math.ceil(items.length/2)*(CH+GAP))+'px';
+  fitFont();
+}
+function fitFont(){qs.map(function(q){return q.el}).concat(ans.map(function(c){return c.el})).forEach(function(el){var f=17;el.style.fontSize=f+'px';while(el.scrollWidth>CW-6&&f>11){f--;el.style.fontSize=f+'px'}})}
+function place(c){c.el.style.transform='translate('+c.x+'px,'+c.y+'px)'}
+function down(e,c){
+  if(c.at&&c.at.state==='ok')return;
+  e.preventDefault();c.el.setPointerCapture(e.pointerId);
+  drag={c:c,dx:e.clientX-c.x,dy:e.clientY-c.y};
+  c.el.classList.add('drag');c.el.style.zIndex=20;
+  if(c.at){detach(c)}
+  c.el.onpointermove=move;c.el.onpointerup=up;c.el.onpointercancel=up;
+}
+function move(e){
+  if(!drag)return;var c=drag.c;
+  c.x=Math.max(0,Math.min(board.clientWidth-CW,e.clientX-drag.dx));
+  c.y=Math.max(0,Math.min(board.clientHeight-CH,e.clientY-drag.dy));place(c);
+}
+function up(e){
+  if(!drag)return;var c=drag.c;c.el.classList.remove('drag');c.el.style.zIndex='';c.el.onpointermove=c.el.onpointerup=c.el.onpointercancel=null;
+  var q=target(c);
+  if(q){attach(c,q)}else{c.x=c.hx;c.y=c.hy;place(c)}
+  drag=null;setFb('');
+}
+function target(c){
+  var cx=c.x+CW/2,cy=c.y+CH/2,best=null,bd=1e9;
+  qs.forEach(function(q){if(q.ans)return;
+    if(cx>q.x-CW*0.25&&cx<q.x+CW*1.25&&cy>q.y-6&&cy<q.y+CH+6){var d=Math.abs(cy-q.y-CH/2);if(d<bd){bd=d;best=q}}});
+  return best;
+}
+function attach(c,q){q.ans=c;c.at=q;c.x=q.x;c.y=q.y;place(c);c.el.classList.add('snap');q.slot.style.visibility='hidden'}
+function detach(c){var q=c.at;q.ans=null;c.at=null;q.state='';q.slot.style.visibility='';[q.el,c.el].forEach(function(el){el.classList.remove('ok','bad')});c.el.classList.remove('snap')}
+function check1(){
+  var open=qs.filter(function(q){return !q.ans}).length;
+  if(open){setFb(open===1?'Es fehlt noch 1 Paar.':'Es fehlen noch '+open+' Paare.','bad');return}
+  var ok=0;qs.forEach(function(q){q.state=(q.k===q.ans.k)?'ok':'bad';[q.el,q.ans.el].forEach(function(el){el.classList.remove('ok','bad');el.classList.add(q.state)});if(q.state==='ok')ok++});
+  if(ok===PAIRS.length){done('Richtig. Wurzelziehen, Ausklammern oder pq-Formel: Das Kennzeichen entscheidet.')}
+  else{setFb(ok+' von '+PAIRS.length+' Paaren richtig. Rote Lösungen wegziehen und neu zuordnen.','bad')}
+}
+/* Stufe 2 und 3 */
+function norm(s){return (s||'').replace(/[−–]/g,'-').replace(/\s+/g,'').replace(',', '.')}
+function checkFields(root){
+  var fs=root.querySelectorAll('select,input'),ok=0,empty=0,sets={};
+  fs.forEach(function(f){if(f.dataset.set){(sets[f.dataset.set]=sets[f.dataset.set]||[]).push(f)}});
+  fs.forEach(function(f){
+    if(f.dataset.set)return;
+    f.classList.remove('ok','bad');
+    if(!norm(f.value)){empty++;return}
+    if(norm(f.value)===norm(f.dataset.a)){f.classList.add('ok');ok++}else f.classList.add('bad');
+  });
+  Object.keys(sets).forEach(function(k){var g=sets[k],want=g.map(function(f){return norm(f.dataset.a)}),have=g.map(function(f){return norm(f.value)});
+    g.forEach(function(f){f.classList.remove('ok','bad')});
+    if(have.some(function(v){return !v})){empty+=have.filter(function(v){return !v}).length;return}
+    var good=have.slice().sort().join('|')===want.slice().sort().join('|');
+    g.forEach(function(f){f.classList.add(good?'ok':'bad');if(good)ok++});
+  });
+  return {ok:ok,total:fs.length,empty:empty};
+}
+function check23(){
+  var r=checkFields($(stage===2?'t2':'t3'));
+  if(r.ok===r.total){done('Super, alles richtig!')}
+  else if(r.empty){setFb('Noch '+r.empty+' Felder leer. '+r.ok+' von '+r.total+' richtig.','bad')}
+  else{setFb(r.ok+' von '+r.total+' richtig. Rote Felder verbessern.','bad')}
+}
+/* Steuerung */
+function setFb(t,c){var f=$('fb');f.textContent=t;f.className='fb'+(c?' '+c:'')}
+function done(t){setFb(t,'ok');$('checkbtn').style.display='none';$('nextbtn').style.display='inline-block'}
+function go(n){
+  stage=n;setFb('');['s1','s2','s3','s4'].forEach(function(id,i){$(id).classList.toggle('on',i+1===n)});
+  ['h1','h2','h3'].forEach(function(id){$(id).classList.remove('on')});
+  $('stufe').textContent=n<4?'Stufe '+n+' von 3':'Fertig';
+  $('checkbtn').style.display=n<4?'inline-block':'none';$('nextbtn').style.display='none';$('bar').style.display=n<4?'block':'none';
+  window.scrollTo(0,0);
+}
+$('checkbtn').onclick=function(){if(stage===1)check1();else check23()};
+$('nextbtn').onclick=function(){go(stage+1)};
+$('helpbtn').onclick=function(){var h=$('h'+stage);if(h)h.classList.toggle('on')};
+buildCards();
 </script>
-
 </body>
 </html>
-

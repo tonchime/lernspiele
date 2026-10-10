@@ -2,34 +2,31 @@
 <html lang="de">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Drei Verfahren</title>
 <style>
-:root{--blue:#2a7ab9;--blue-dark:#1f5f91;--bg:#eef3f7;--tile:#ffffff;--line:#c9d6e2;--ink:#1d2a36;--muted:#5b6b7a;--ok:#2e9e5b;--ok-bg:#e3f5ea;--bad:#d6453d;--bad-bg:#fbe5e3;--sel:#ffd84d;--sel-bg:#fff7d1}
+:root{--blue:#2f7fc1;--blue-dark:#215f94;--bg:#e4ecf3;--ink:#1d2a36;--muted:#5b6b7a;--line:#b9c8d6;--ok:#2e9e5b;--ok-bg:#dff5e7;--bad:#d6453d;--bad-bg:#fbe3e1}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%}
-body{background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:1.4}
-header{background:var(--blue);color:#fff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:5}
-header h1{margin:0;font-size:19px;font-weight:bold}
-header .stufe{font-size:14px;background:rgba(255,255,255,.2);border-radius:14px;padding:3px 10px;white-space:nowrap}
-main{max-width:640px;margin:0 auto;padding:12px 12px 130px}
-.task{background:var(--tile);border:1px solid var(--line);border-radius:8px;padding:10px 12px 10px 44px;position:relative;margin-bottom:12px;font-size:17px}
-.task::before{content:"i";position:absolute;left:12px;top:9px;width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;font-weight:bold;text-align:center;line-height:24px;font-family:Georgia,serif}
-.screen{display:none}.screen.on{display:block}
-/* Paare */
-#board{position:relative;background:var(--tile);border:1px solid var(--line);border-radius:8px;touch-action:pan-y;overflow:hidden;user-select:none;-webkit-user-select:none}
-.card,.slot{position:absolute;left:0;top:0;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:17px;white-space:nowrap;will-change:transform}
-.card{background:#fff;border:2px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.15);cursor:grab;touch-action:none}
-.card.q{background:#f0f6fc;cursor:default;border-radius:8px 0 0 8px}
-.slot{border:2px dashed #b7c6d4;color:#9aabba;font-size:13px;border-radius:0 8px 8px 0}
-.card.drag{z-index:20;box-shadow:0 6px 14px rgba(0,0,0,.25);border-color:var(--blue);transform-origin:center}
-.card.snap{border-radius:0 8px 8px 0;border-left-width:1px}
-.card.ok{border-color:var(--ok);background:var(--ok-bg)}
+html,body{margin:0;height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:1.4;display:flex;flex-direction:column}
+header{background:var(--blue);color:#fff;padding:0 10px;height:46px;display:flex;align-items:center;gap:8px;flex:none}
+header h1{margin:0;font-size:18px;font-weight:bold;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .stufe{font-size:13px;background:rgba(255,255,255,.22);border-radius:14px;padding:3px 9px;white-space:nowrap}
+.ico{width:32px;height:32px;border-radius:50%;border:2px solid #fff;background:transparent;color:#fff;font-weight:bold;font-size:17px;padding:0;flex:none;font-family:Georgia,serif}
+main{flex:1;position:relative;min-height:0}
+.screen{display:none;position:absolute;inset:0}
+.screen.on{display:block}
+/* Stufe 1: Spielfläche */
+#board{position:absolute;inset:0;touch-action:none;overflow:hidden;user-select:none;-webkit-user-select:none;background:radial-gradient(circle at 50% 30%,#f3f7fb,#dbe6ef)}
+.card{position:absolute;left:0;top:0;height:46px;transition:transform .22s;border-radius:7px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:17px;white-space:nowrap;background:#fff;border:1px solid #9fb3c4;box-shadow:0 2px 4px rgba(0,0,0,.22);cursor:grab;touch-action:none;will-change:transform}
+.card.drag{box-shadow:0 8px 18px rgba(0,0,0,.3);border-color:var(--blue);transition:none}
+.card.joined{border-color:#7a93aa}
+.card.ok{border-color:var(--ok);background:var(--ok-bg);box-shadow:none;cursor:default}
 .card.bad{border-color:var(--bad);background:var(--bad-bg)}
-.poolline{position:absolute;left:8px;right:8px;border-top:1px dashed var(--line)}
-/* Lückentext */
-.text{background:var(--tile);border:1px solid var(--line);border-radius:8px;padding:12px}
-.line{padding:8px 4px;border-bottom:1px dashed var(--line);font-size:20px;line-height:2}
+/* Stufen 2 und 3 */
+.sheet{position:absolute;inset:0;overflow:auto;-webkit-overflow-scrolling:touch;padding:12px 12px 90px}
+.text{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;max-width:620px;margin:0 auto}
+.line{padding:8px 2px;border-bottom:1px dashed var(--line);font-size:20px;line-height:2}
 .line .eq{display:block;font-weight:bold;line-height:1.5;margin-bottom:2px}
 .line:last-child{border-bottom:0}
 .line .r{color:var(--muted);font-size:16px;margin-left:10px}
@@ -37,41 +34,32 @@ select,input{font:inherit;font-size:18px;border:2px solid var(--line);border-rad
 input{width:3.4em;text-align:center}
 select.ok,input.ok{border-color:var(--ok);background:var(--ok-bg)}
 select.bad,input.bad{border-color:var(--bad);background:var(--bad-bg)}
-/* Leiste */
-.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:8px 12px 10px;z-index:5}
-.bar .fb{font-size:16px;min-height:22px;margin-bottom:6px;text-align:center}
-.bar .row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.fb.ok{color:var(--ok);font-weight:bold}.fb.bad{color:var(--bad);font-weight:bold}
-button{font:inherit;cursor:pointer;border:0;border-radius:24px;padding:11px 18px;font-size:17px;font-weight:bold}
-.check{background:var(--blue);color:#fff}
-.check:active{background:var(--blue-dark)}
-.help{background:#fff;color:var(--blue);border:2px solid var(--blue);width:44px;height:44px;border-radius:50%;padding:0;font-size:22px;flex:none}
-.next{background:var(--ok);color:#fff;display:none}
-.helpbox{display:none;background:#fff8e1;border:1px solid #ffd54f;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:16px}
-.helpbox.on{display:block}
-.final{text-align:center;padding:30px 10px}
-.final .big{font-size:40px}
+/* Prüfknopf unten rechts, wie bei LearningApps */
+#checkbtn{position:fixed;right:16px;bottom:18px;width:60px;height:60px;border-radius:50%;border:0;background:var(--blue);box-shadow:0 4px 10px rgba(0,0,0,.3);cursor:pointer;z-index:5000;padding:0}
+#checkbtn:active{background:var(--blue-dark)}
+#checkbtn svg{width:34px;height:34px;display:block;margin:auto}
+/* Dialog */
+#dim{display:none;position:fixed;inset:0;background:rgba(20,40,60,.45);z-index:9000;align-items:center;justify-content:center;padding:20px}
+#dim.on{display:flex}
+.box{background:#fff;border-radius:12px;padding:20px 18px 16px;max-width:420px;width:100%;box-shadow:0 10px 30px rgba(0,0,0,.35);text-align:center}
+.box .t{font-size:18px;margin-bottom:16px}
+.box .t.ok{color:var(--ok);font-weight:bold}
+.box .t.bad{color:var(--bad);font-weight:bold}
+.box button{font:inherit;font-weight:bold;font-size:17px;border:0;border-radius:24px;padding:10px 26px;background:var(--blue);color:#fff;cursor:pointer}
+.box button.ok{background:var(--ok)}
+/* Ende */
+.final{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px}
+.final .big{font-size:44px;color:#e6a800}
 .final h2{color:var(--ok);margin:10px 0}
-.final p{color:var(--muted)}
+.final p{color:var(--muted);max-width:420px}
+.final button{font:inherit;font-weight:bold;font-size:17px;border:0;border-radius:24px;padding:10px 26px;background:var(--blue);color:#fff;cursor:pointer}
 </style>
 </head>
 <body>
-<header><h1>Drei Verfahren</h1><span class="stufe" id="stufe">Stufe 1 von 3</span></header>
+<header><h1>Drei Verfahren</h1><span class="stufe" id="stufe">1 / 3</span><button class="ico" id="infobtn" title="Aufgabe">i</button><button class="ico" id="helpbtn" title="Hilfe">?</button></header>
 <main>
-
-<!-- Stufe 1: Paare zuordnen -->
-<section class="screen on" id="s1">
-  <div class="task">Ordnen Sie jeder Gleichung ihre Lösungen zu: Lösung mit dem Finger neben die Gleichung ziehen.</div>
-  <div class="helpbox" id="h1">Nur x² und eine Zahl: Wurzelziehen. x² und x ohne Zahl: Ausklammern. x², x und Zahl: pq-Formel.</div>
-  <div id="board"></div>
-  <div class="hint">Zum Ändern eine Lösung einfach wieder wegziehen.</div>
-</section>
-
-<!-- Stufe 2: Auswahl aus Liste -->
-<section class="screen" id="s2">
-  <div class="task">Bringen Sie die Gleichung in die Normalform und lösen Sie mit der pq-Formel. Wählen Sie die passenden Zahlen.</div>
-  <div class="helpbox" id="h2">Rechts 0, dann durch die Zahl vor x² teilen, auch die Zahl ohne x. p und q mit Vorzeichen.</div>
-  <div class="text" id="t2">
+  <section class="screen on" id="s1"><div id="board"></div></section>
+  <section class="screen" id="s2"><div class="sheet"><div class="text" id="t2">
     <div class="line">3x² + 12x = 15 <span class="r">| − 15</span></div>
     <div class="line">3x² + 12x − 15 = 0 <span class="r">| : 3</span></div>
     <div class="line">x² + <select data-a="4"><option value="">?</option><option>12</option><option>4</option><option>3</option></select> x <select data-a="− 5"><option value="">?</option><option>− 15</option><option>+ 5</option><option>− 5</option></select> = 0</div>
@@ -79,138 +67,140 @@ button{font:inherit;cursor:pointer;border:0;border-radius:24px;padding:11px 18px
     <div class="line">x₁,₂ = <select data-a="−2"><option value="">?</option><option>2</option><option>−4</option><option>−2</option></select> ± √(<select data-a="4"><option value="">?</option><option>4</option><option>2</option><option>16</option></select> − (<select data-a="−5"><option value="">?</option><option>−15</option><option>5</option><option>−5</option></select>))</div>
     <div class="line">x₁,₂ = −2 ± <select data-a="3"><option value="">?</option><option>9</option><option>3</option><option>1</option></select></div>
     <div class="line">x₁ = <select data-a="1"><option value="">?</option><option>5</option><option>−1</option><option>1</option></select> &nbsp; x₂ = <select data-a="−5"><option value="">?</option><option>−1</option><option>−5</option><option>1</option></select></div>
-  </div>
-</section>
-
-<!-- Stufe 3: Einschreiben -->
-<section class="screen" id="s3">
-  <div class="task">Lösen Sie jede Gleichung mit dem passenden Verfahren. Schreiben Sie die Lösungen ein (negative Zahlen mit Minus, zum Beispiel −3).</div>
-  <div class="helpbox" id="h3">Bei x² − 6x = 0 nicht durch x teilen. Bei der pq-Formel: −p/2 ± √((p/2)² − q), hier −1 ± √(1 + 8) = −1 ± 3.</div>
-  <div class="text" id="t3">
+  </div></div></section>
+  <section class="screen" id="s3"><div class="sheet"><div class="text" id="t3">
     <div class="line"><span class="eq">x² = 81</span>x₁ = <input data-set="a" data-a="9"> &nbsp; x₂ = <input data-set="a" data-a="-9"></div>
     <div class="line"><span class="eq">x² − 6x = 0</span>x · (x − <input data-a="6">) = 0<br>x₁ = <input data-set="b" data-a="0"> &nbsp; x₂ = <input data-set="b" data-a="6"></div>
     <div class="line"><span class="eq">x² + 2x − 8 = 0</span>p = <input data-a="2"> &nbsp; q = <input data-a="-8"><br>x₁ = <input data-set="c" data-a="2"> &nbsp; x₂ = <input data-set="c" data-a="-4"></div>
     <div class="line"><span class="eq">4x² = 100</span>x₁ = <input data-set="d" data-a="5"> &nbsp; x₂ = <input data-set="d" data-a="-5"></div>
-  </div>
-</section>
-
-<!-- Ende -->
-<section class="screen" id="s4">
-  <div class="final"><div class="big">★ ★ ★</div><h2>Alle drei Stufen geschafft!</h2><p>Wurzelziehen, Ausklammern, pq-Formel: Das Kennzeichen entscheidet.</p><button class="check" onclick="location.reload()">Noch einmal</button></div>
-</section>
+  </div></div></section>
+  <section class="screen" id="s4"><div class="final"><div class="big">★ ★ ★</div><h2>Alle drei Stufen geschafft!</h2><p>Wurzelziehen, Ausklammern, pq-Formel: Das Kennzeichen entscheidet.</p><button onclick="location.reload()">Noch einmal</button></div></section>
 </main>
-
-<div class="bar" id="bar">
-  <div class="fb" id="fb"></div>
-  <div class="row">
-    <button class="help" id="helpbtn" title="Hilfe">?</button>
-    <button class="check" id="checkbtn">Lösung überprüfen</button>
-    <button class="next" id="nextbtn">Weiter ›</button>
-  </div>
-</div>
+<button id="checkbtn" title="Lösung überprüfen"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5 10-11"/></svg></button>
+<div id="dim"><div class="box"><div class="t" id="dtext"></div><button id="dbtn">OK</button></div></div>
 
 <script>
 var PAIRS=[["x² = 36","x = 6 oder x = −6"],["2x² = 50","x = 5 oder x = −5"],["x² − 5x = 0","x = 0 oder x = 5"],["x² + 3x = 0","x = 0 oder x = −3"],["x² + 6x + 8 = 0","x = −2 oder x = −4"],["x² − 2x − 15 = 0","x = 5 oder x = −3"]];
-var stage=1;
-var $=function(id){return document.getElementById(id)};
+var TASK={1:'Ordnen Sie jeder Gleichung ihre Lösungen zu. Ziehen Sie dazu die passenden Karten aufeinander.',
+          2:'Bringen Sie die Gleichung in die Normalform und lösen Sie mit der pq-Formel. Wählen Sie die passenden Zahlen.',
+          3:'Lösen Sie jede Gleichung mit dem passenden Verfahren. Schreiben Sie die Lösungen ein (negative Zahlen mit Minus, zum Beispiel −3).'};
+var HELP={1:'Nur x² und eine Zahl: Wurzelziehen. x² und x ohne Zahl: Ausklammern. x², x und Zahl: pq-Formel.',
+          2:'Rechts 0, dann durch die Zahl vor x² teilen, auch die Zahl ohne x. p und q mit Vorzeichen.',
+          3:'Bei x² − 6x = 0 nicht durch x teilen. Bei der pq-Formel: −p/2 ± √((p/2)² − q), hier −1 ± √(1 + 8) = −1 ± 3.'};
+var stage=1, $=function(id){return document.getElementById(id)};
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
-/* Stufe 1: Gleichungen links fest, Lösungen aus dem Vorrat daneben ziehen (Pointer Events, touch-action:none: die Seite scrollt beim Ziehen nicht) */
-var board=$("board"), qs=[], ans=[], drag=null, CW=0, CH=44, GAP=6, POOLY=0;
+/* ---------- Stufe 1: Paare zuordnen (alle Karten verstreut, jede Karte auf ihren Partner ziehen) ---------- */
+var board=$('board'), cards=[], drag=null, CW=160, CH=46, GAP=8, zTop=10, G={top:0,pitch:80,rows:6,cols:2};
 function buildCards(){
-  var W=board.clientWidth; CW=Math.floor((W-3*GAP)/2);
-  board.innerHTML='';qs=[];ans=[];
-  PAIRS.forEach(function(p,i){
-    var y=GAP+i*(CH+GAP);
-    var q=document.createElement('div');q.className='card q';q.textContent=p[0];q.style.width=CW+'px';q.style.transform='translate('+GAP+'px,'+y+'px)';board.appendChild(q);
-    var sl=document.createElement('div');sl.className='slot';sl.textContent='Lösung hierher';sl.style.width=CW+'px';sl.style.transform='translate('+(GAP+CW)+'px,'+y+'px)';board.appendChild(sl);
-    qs.push({el:q,slot:sl,k:i,x:GAP+CW,y:y,ans:null});
-  });
-  POOLY=GAP+PAIRS.length*(CH+GAP)+12;
-  var line=document.createElement('div');line.className='poolline';line.style.top=(POOLY-10)+'px';board.appendChild(line);
-  var items=PAIRS.map(function(p,i){return {t:p[1],k:i}});shuffle(items);
+  var W=board.clientWidth, H=board.clientHeight-72;
+  G.cols=Math.max(2,Math.min(4,Math.floor((W-GAP)/(240+GAP))));CW=Math.min(240,Math.floor((W-(G.cols+1)*GAP)/G.cols));   /* Handy 2 Spalten, Tablet 3, breiter Bildschirm 4 */
+  var items=[];PAIRS.forEach(function(p,i){items.push({t:p[0],k:i,side:0});items.push({t:p[1],k:i,side:1})});shuffle(items);
+  var rows=Math.ceil(items.length/G.cols);
+  G.pitch=Math.min(Math.floor((H-2*GAP)/rows),CH+56);G.rows=Math.floor((H-2*GAP)/G.pitch);G.top=GAP+Math.max(0,Math.floor((H-rows*G.pitch)/2));
+  board.innerHTML='';cards=[];
   items.forEach(function(it,n){
     var d=document.createElement('div');d.className='card';d.textContent=it.t;d.style.width=CW+'px';
-    var c={el:d,k:it.k,hx:GAP+(n%2)*(CW+GAP),hy:POOLY+Math.floor(n/2)*(CH+GAP),x:0,y:0,at:null};
-    c.x=c.hx;c.y=c.hy;place(c);d.addEventListener('pointerdown',function(e){down(e,c)});board.appendChild(d);ans.push(c);
+    var jx=Math.round((Math.random()-0.5)*12), jy=Math.round((Math.random()-0.5)*Math.max(0,G.pitch-CH-6));
+    var c={el:d,k:it.k,side:it.side,x:GAP+(n%G.cols)*(CW+GAP)+jx,y:G.top+Math.floor(n/G.cols)*G.pitch+jy,partner:null,state:''};
+    clamp(c);place(c);d.style.zIndex=++zTop;d.addEventListener('pointerdown',function(e){down(e,c)});board.appendChild(d);cards.push(c);
   });
-  board.style.height=(POOLY+Math.ceil(items.length/2)*(CH+GAP))+'px';
   fitFont();
 }
-function fitFont(){qs.map(function(q){return q.el}).concat(ans.map(function(c){return c.el})).forEach(function(el){var f=17;el.style.fontSize=f+'px';while(el.scrollWidth>CW-6&&f>11){f--;el.style.fontSize=f+'px'}})}
+function fitFont(){cards.forEach(function(c){var f=17;c.el.style.fontSize=f+'px';while(c.el.scrollWidth>CW-6&&f>11){f--;c.el.style.fontSize=f+'px'}})}
+function clamp(c){c.x=Math.max(0,Math.min(board.clientWidth-CW,c.x));c.y=Math.max(0,Math.min(board.clientHeight-CH,c.y))}
 function place(c){c.el.style.transform='translate('+c.x+'px,'+c.y+'px)'}
 function down(e,c){
-  if(c.at&&c.at.state==='ok')return;
+  if(c.state==='ok')return;
   e.preventDefault();c.el.setPointerCapture(e.pointerId);
+  if(c.partner)split(c);
   drag={c:c,dx:e.clientX-c.x,dy:e.clientY-c.y};
-  c.el.classList.add('drag');c.el.style.zIndex=20;
-  if(c.at){detach(c)}
+  c.el.classList.add('drag');c.el.style.zIndex=++zTop;
   c.el.onpointermove=move;c.el.onpointerup=up;c.el.onpointercancel=up;
 }
-function move(e){
-  if(!drag)return;var c=drag.c;
-  c.x=Math.max(0,Math.min(board.clientWidth-CW,e.clientX-drag.dx));
-  c.y=Math.max(0,Math.min(board.clientHeight-CH,e.clientY-drag.dy));place(c);
-}
+function move(e){if(!drag)return;var c=drag.c;c.x=e.clientX-drag.dx;c.y=e.clientY-drag.dy;clamp(c);place(c)}
 function up(e){
-  if(!drag)return;var c=drag.c;c.el.classList.remove('drag');c.el.style.zIndex='';c.el.onpointermove=c.el.onpointerup=c.el.onpointercancel=null;
-  var q=target(c);
-  if(q){attach(c,q)}else{c.x=c.hx;c.y=c.hy;place(c)}
-  drag=null;setFb('');
+  if(!drag)return;var c=drag.c;c.el.classList.remove('drag');c.el.onpointermove=c.el.onpointerup=c.el.onpointercancel=null;
+  var t=target(c);if(t)join(c,t);
+  drag=null;
 }
-function target(c){
+function target(c){                                   /* freie Karte, über der die Mitte der gezogenen Karte liegt */
   var cx=c.x+CW/2,cy=c.y+CH/2,best=null,bd=1e9;
-  qs.forEach(function(q){if(q.ans)return;
-    if(cx>q.x-CW*0.25&&cx<q.x+CW*1.25&&cy>q.y-6&&cy<q.y+CH+6){var d=Math.abs(cy-q.y-CH/2);if(d<bd){bd=d;best=q}}});
+  cards.forEach(function(o){if(o===c||o.partner||o.state==='ok')return;
+    if(cx>o.x&&cx<o.x+CW&&cy>o.y&&cy<o.y+CH){var d=Math.abs(cx-o.x-CW/2)+Math.abs(cy-o.y-CH/2);if(d<bd){bd=d;best=o}}});
   return best;
 }
-function attach(c,q){q.ans=c;c.at=q;c.x=q.x;c.y=q.y;place(c);c.el.classList.add('snap');q.slot.style.visibility='hidden'}
-function detach(c){var q=c.at;q.ans=null;c.at=null;q.state='';q.slot.style.visibility='';[q.el,c.el].forEach(function(el){el.classList.remove('ok','bad')});c.el.classList.remove('snap')}
-function check1(){
-  var open=qs.filter(function(q){return !q.ans}).length;
-  if(open){setFb(open===1?'Es fehlt noch 1 Paar.':'Es fehlen noch '+open+' Paare.','bad');return}
-  var ok=0;qs.forEach(function(q){q.state=(q.k===q.ans.k)?'ok':'bad';[q.el,q.ans.el].forEach(function(el){el.classList.remove('ok','bad');el.classList.add(q.state)});if(q.state==='ok')ok++});
-  if(ok===PAIRS.length){done('Richtig. Wurzelziehen, Ausklammern oder pq-Formel: Das Kennzeichen entscheidet.')}
-  else{setFb(ok+' von '+PAIRS.length+' Paaren richtig. Rote Lösungen wegziehen und neu zuordnen.','bad')}
+function join(c,t){                                   /* gezogene Karte rastet neben der Zielkarte ein, Paar bleibt am Ort der Zielkarte */
+  c.partner=t;t.partner=c;
+  var W=board.clientWidth;
+  if(t.x+2*CW+2<=W){c.x=t.x+CW+2}else if(t.x-CW-2>=0){c.x=t.x-CW-2}else{t.x=W-2*CW-2;c.x=t.x+CW+2}
+  c.y=t.y;place(c);place(t);
+  [c,t].forEach(function(x){x.el.classList.add('joined');x.el.style.zIndex=++zTop});
+  resolveOverlaps(unitOf(c));
 }
-/* Stufe 2 und 3 */
+function split(c){
+  var p=c.partner;c.partner=p.partner=null;
+  [c,p].forEach(function(x){x.state='';x.el.classList.remove('ok','bad','joined');x.el.style.zIndex=++zTop});
+}
+/* Einheiten: freie Karte oder Paar; was unter einem neuen Paar liegt, rückt auf den nächsten freien Platz */
+function unitOf(c){var m=c.partner?[c,c.partner]:[c];var x=Math.min.apply(null,m.map(function(k){return k.x}));return {m:m,x:x,y:m[0].y,w:m.length===2?2*CW+2:CW,h:CH}}
+function units(){var seen=[],u=[];cards.forEach(function(c){if(seen.indexOf(c)>=0)return;var t=unitOf(c);t.m.forEach(function(k){seen.push(k)});u.push(t)});return u}
+function hit(a,b,x,y){var ax=x!==undefined?x:a.x,ay=y!==undefined?y:a.y;return ax<b.x+b.w-2&&ax+a.w>b.x+2&&ay<b.y+b.h-2&&ay+a.h>b.y+2}
+function resolveOverlaps(fixed){
+  var all=units(),W=board.clientWidth,H=board.clientHeight,HF=H-72;
+  all.forEach(function(u){
+    if(u.m[0]===fixed.m[0]||!hit(u,fixed))return;
+    var others=all.filter(function(o){return o!==u}),best=null,bd=1e9;
+    function tryAt(x,y){if(x<0||y<0||x+u.w>W||y+u.h>H)return;for(var i=0;i<others.length;i++)if(hit(u,others[i],x,y))return;var d=Math.abs(x-u.x)+Math.abs(y-u.y);if(d<bd){bd=d;best=[x,y]}}
+    for(var r=0;r<G.rows+1;r++){var y=G.top+r*G.pitch;for(var ci=0;ci<G.cols;ci++)tryAt(GAP+ci*(CW+GAP),y)}
+    if(!best){for(var y2=0;y2<=HF-u.h;y2+=10)for(var x2=0;x2<=W-u.w;x2+=10)tryAt(x2,y2)}
+    if(!best){for(var y3=HF-u.h;y3<=H-u.h;y3+=10)for(var x3=0;x3<=W-u.w;x3+=10)tryAt(x3,y3)}
+    if(best){var dx=best[0]-u.x,dy=best[1]-u.y;u.m.forEach(function(k){k.x+=dx;k.y+=dy;place(k)});u.x=best[0];u.y=best[1]}
+  });
+}
+function check1(){
+  var pairs=cards.filter(function(c){return c.partner&&cards.indexOf(c)<cards.indexOf(c.partner)});
+  if(!pairs.length){dialog('Bilden Sie zuerst Paare: Karten aufeinander ziehen.','bad','OK');return}
+  var ok=0;pairs.forEach(function(c){var p=c.partner,good=(c.k===p.k&&c.side!==p.side);c.state=p.state=good?'ok':'bad';
+    [c,p].forEach(function(x){x.el.classList.remove('ok','bad');x.el.classList.add(x.state)});if(good)ok++});
+  if(ok===PAIRS.length){dialog('Richtig. Wurzelziehen, Ausklammern oder pq-Formel: Das Kennzeichen entscheidet.','ok','Weiter',function(){go(2)})}
+  else{var open=PAIRS.length-pairs.length;dialog(ok+' von '+PAIRS.length+' Paaren richtig.'+(pairs.length-ok?' Rote Paare auseinanderziehen und neu zuordnen.':'')+(open?' Noch '+open+(open===1?' Paar':' Paare')+' bilden.':''),'bad','OK')}
+}
+/* ---------- Stufen 2 und 3 ---------- */
 function norm(s){return (s||'').replace(/[−–]/g,'-').replace(/\s+/g,'').replace(',', '.')}
 function checkFields(root){
   var fs=root.querySelectorAll('select,input'),ok=0,empty=0,sets={};
   fs.forEach(function(f){if(f.dataset.set){(sets[f.dataset.set]=sets[f.dataset.set]||[]).push(f)}});
-  fs.forEach(function(f){
-    if(f.dataset.set)return;
-    f.classList.remove('ok','bad');
+  fs.forEach(function(f){if(f.dataset.set)return;f.classList.remove('ok','bad');
     if(!norm(f.value)){empty++;return}
-    if(norm(f.value)===norm(f.dataset.a)){f.classList.add('ok');ok++}else f.classList.add('bad');
-  });
+    if(norm(f.value)===norm(f.dataset.a)){f.classList.add('ok');ok++}else f.classList.add('bad')});
   Object.keys(sets).forEach(function(k){var g=sets[k],want=g.map(function(f){return norm(f.dataset.a)}),have=g.map(function(f){return norm(f.value)});
     g.forEach(function(f){f.classList.remove('ok','bad')});
     if(have.some(function(v){return !v})){empty+=have.filter(function(v){return !v}).length;return}
     var good=have.slice().sort().join('|')===want.slice().sort().join('|');
-    g.forEach(function(f){f.classList.add(good?'ok':'bad');if(good)ok++});
-  });
+    g.forEach(function(f){f.classList.add(good?'ok':'bad');if(good)ok++})});
   return {ok:ok,total:fs.length,empty:empty};
 }
 function check23(){
   var r=checkFields($(stage===2?'t2':'t3'));
-  if(r.ok===r.total){done('Super, alles richtig!')}
-  else if(r.empty){setFb('Noch '+r.empty+' Felder leer. '+r.ok+' von '+r.total+' richtig.','bad')}
-  else{setFb(r.ok+' von '+r.total+' richtig. Rote Felder verbessern.','bad')}
+  if(r.ok===r.total){dialog('Super, alles richtig!','ok','Weiter',function(){go(stage+1)})}
+  else if(r.empty){dialog('Noch '+r.empty+(r.empty===1?' Feld':' Felder')+' leer. '+r.ok+' von '+r.total+' richtig.','bad','OK')}
+  else{dialog(r.ok+' von '+r.total+' richtig. Rote Felder verbessern.','bad','OK')}
 }
-/* Steuerung */
-function setFb(t,c){var f=$('fb');f.textContent=t;f.className='fb'+(c?' '+c:'')}
-function done(t){setFb(t,'ok');$('checkbtn').style.display='none';$('nextbtn').style.display='inline-block'}
+/* ---------- Steuerung ---------- */
+var after=null;
+function dialog(t,cls,btn,fn){$('dtext').textContent=t;$('dtext').className='t'+(cls?' '+cls:'');$('dbtn').textContent=btn||'OK';$('dbtn').className=cls==='ok'?'ok':'';after=fn||null;$('dim').classList.add('on')}
+$('dbtn').onclick=function(){$('dim').classList.remove('on');var f=after;after=null;if(f)f()};
 function go(n){
-  stage=n;setFb('');['s1','s2','s3','s4'].forEach(function(id,i){$(id).classList.toggle('on',i+1===n)});
-  ['h1','h2','h3'].forEach(function(id){$(id).classList.remove('on')});
-  $('stufe').textContent=n<4?'Stufe '+n+' von 3':'Fertig';
-  $('checkbtn').style.display=n<4?'inline-block':'none';$('nextbtn').style.display='none';$('bar').style.display=n<4?'block':'none';
-  window.scrollTo(0,0);
+  stage=n;['s1','s2','s3','s4'].forEach(function(id,i){$(id).classList.toggle('on',i+1===n)});
+  $('stufe').textContent=n<4?n+' / 3':'✓';
+  $('checkbtn').style.display=n<4?'block':'none';$('infobtn').style.display=$('helpbtn').style.display=n<4?'block':'none';
+  if(n<4)dialog(TASK[n],'','OK');
 }
 $('checkbtn').onclick=function(){if(stage===1)check1();else check23()};
-$('nextbtn').onclick=function(){go(stage+1)};
-$('helpbtn').onclick=function(){var h=$('h'+stage);if(h)h.classList.toggle('on')};
-buildCards();
+$('infobtn').onclick=function(){dialog(TASK[stage],'','OK')};
+$('helpbtn').onclick=function(){dialog(HELP[stage],'','OK')};
+window.addEventListener('resize',function(){if(stage===1){cards.forEach(function(c){clamp(c);place(c)})}});
+buildCards();dialog(TASK[1],'','OK');
 </script>
 </body>
 </html>

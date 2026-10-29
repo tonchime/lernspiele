@@ -5,6 +5,7 @@ Interaktive Lernspiele für den Mathematikunterricht – direkt im Browser, ohne
 
 | Spiel | Unterrichtsdatum | Schülerlink |
 |---|---|---|
+| Grundschaltungen und Ohmsches Gesetz (Elektrotechnik: Reihenschaltung, Parallelschaltung, Vorwiderstand; Claude-Version · v1, aus gemeinsamer Vorlage) | 02.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-02-et-grundschaltungen/ |
 | Drei Verfahren · Wiederholung (ChatGPT-Version · v1, aus gemeinsamer Vorlage) | 12.10.2026 | https://tonchime.github.io/lernspiele/chatgpt/spiele/2026-10-12-drei-verfahren/ |
 | Drei Verfahren (quadratische Gleichungen: Wurzelziehen, Ausklammern, pq-Formel) | 12.10.2026 | https://tonchime.github.io/lernspiele/ |
 | Drei Verfahren, ChatGPT-Version (wird nur von ChatGPT bearbeitet) | 12.10.2026 | https://tonchime.github.io/lernspiele/chatgpt/ |

@@ -25,7 +25,7 @@ const SPIEL={
   fach:"Elektrotechnik",
   untertitel:"Reihenschaltung · Parallelschaltung · Vorwiderstand",
   datum:"2026-11-02",                            // Unterrichtsdatum
-  version:"Claude-Version · v1",                 // sichtbare Versionsmarke oben rechts
+  version:"Claude-Version · v2",                 // sichtbare Versionsmarke oben rechts
   beispielkarten:["I = U / R","Ohmsches Gesetz"], // die zwei Mini-Karten auf der Kachel von Stufe 1
 
   // Stufe 1: Paare zuordnen [linke Karte, passende Karte]
@@ -41,18 +41,18 @@ const SPIEL={
   // Stufe 2: Zeilen mit Auswahllisten [Zeile, grauer Hinweis rechts (optional)]
   stufe2:[
     ["Reihenschaltung: R₁ = 100 Ω und R₂ = 300 Ω an U = 12 V","Werte"],
-    ["Gesamtwiderstand R = R₁ + R₂ = [*400 Ω|200 Ω|400 kΩ]"],
-    ["Gesamtstrom I = U / R = 12 V / 400 Ω = [*30 mA|3 A|300 mA]"],
-    ["Spannung an R₁: U₁ = I · R₁ = 30 mA · 100 Ω = [*3 V|9 V|12 V]"],
-    ["Spannung an R₂: U₂ = I · R₂ = [*9 V|3 V|12 V]","Probe: U₁ + U₂ = U"],
+    ["Gesamtwiderstand R = [*400 Ω|200 Ω|400 kΩ]"],
+    ["Gesamtstrom I = [*30 mA|3 A|300 mA]"],
+    ["Spannung an R₁: U₁ = [*3 V|9 V|12 V]"],
+    ["Spannung an R₂: U₂ = [*9 V|3 V|12 V]"],
     ["Fehlersuche: Ein Azubi rechnet I = R / U. Richtig ist I = [*U / R|R · U|R / U]","typischer Fehler"]
   ],
 
   // Stufe 3: Aufgaben mit Eingabefeldern (nur Zahlen eingeben, Einheit steht dahinter)
   stufe3:[
-    {gleichung:"Ohmsches Gesetz: U = 6 V, R = 20 Ω", schritte:["I = U / R = {0,3} A = {300} mA"], loesungen:[]},
-    {gleichung:"Vorwiderstand: Lampe 12 V / 0,1 A am Netzgerät 24 V", schritte:["Uᵥ = 24 V − 12 V = {12} V","Rᵥ = Uᵥ / I = 12 V / 0,1 A = {120} Ω"], loesungen:[]},
-    {gleichung:"Reihenschaltung: R₁ = 150 Ω, R₂ = 50 Ω, I = 0,05 A", schritte:["R = R₁ + R₂ = {200} Ω","U = R · I = {10} V"], loesungen:[]},
+    {gleichung:"Ohmsches Gesetz: U = 6 V, R = 20 Ω", schritte:["Stromstärke I = {0,3} A = {300} mA"], loesungen:[]},
+    {gleichung:"Vorwiderstand: Lampe 12 V / 0,1 A am Netzgerät 24 V", schritte:["Spannung am Vorwiderstand Uᵥ = {12} V","Vorwiderstand Rᵥ = {120} Ω"], loesungen:[]},
+    {gleichung:"Reihenschaltung: R₁ = 150 Ω, R₂ = 50 Ω, I = 0,05 A", schritte:["Gesamtwiderstand R = {200} Ω","Gesamtspannung U = {10} V"], loesungen:[]},
     {gleichung:"Für Schnelle – Untersuchung im Heft (wird hier nicht automatisch geprüft)", schritte:[
       "Fall 1: Lampe 12 V / 0,1 A am Netzgerät 30 V. Berechnen Sie den Vorwiderstand.",
       "Fall 2: Zwei dieser Lampen in Reihe am Netzgerät 30 V. Berechnen Sie den Vorwiderstand.",

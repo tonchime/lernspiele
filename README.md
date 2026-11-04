@@ -6,7 +6,7 @@ Interaktive Lernspiele für den Mathematikunterricht – direkt im Browser, ohne
 | Spiel | Unterrichtsdatum | Schülerlink |
 |---|---|---|
 | Wheatstone-Brücke (Elektrotechnik: Brückenspannung, Abgleich, Abgleichbedingung; Claude-Version · v1, aus gemeinsamer Vorlage) | 06.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-06-et-wheatstone-bruecke/ |
-| Spannungsteiler (Elektrotechnik: unbelasteter und belasteter Spannungsteiler, Querstrom und Querstromverhältnis als Vorwissen vor der Brückenschaltung; Claude-Version · v3, aus gemeinsamer Vorlage) | 05.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-05-et-spannungsteiler-bruecke/ |
+| Spannungsteiler (Elektrotechnik: unbelasteter und belasteter Spannungsteiler, Querstrom und Querstromverhältnis als Vorwissen vor der Brückenschaltung; Claude-Version · v4, aus gemeinsamer Vorlage v8) | 05.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-05-et-spannungsteiler-bruecke/ |
 | Parallelschaltung und Knotenpunktregel (Elektrotechnik: Parallelschaltung, Ersatzwiderstand, Stromteiler; Claude-Version · v1, aus gemeinsamer Vorlage) | 03.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-03-et-parallelschaltung/ |
 | Zuordnungen: Tabelle und Koordinaten (Mathematik 11AI1: Punkte im Koordinatensystem, Wertetabellen, Einstieg Zuordnungen und Funktionen; Claude-Version · v1, aus gemeinsamer Vorlage) | 02.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-02-zuordnungen/ |
 | Grundschaltungen und Ohmsches Gesetz (Elektrotechnik: Reihenschaltung, Parallelschaltung, Vorwiderstand; Claude-Version · v2, aus gemeinsamer Vorlage) | 02.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-02-et-grundschaltungen/ |
@@ -23,7 +23,7 @@ Jedes Spiel hat drei Stufen: Paare zuordnen, Lückentext mit Auswahl aus Liste, 
 - Ein überarbeitetes Spiel bleibt in seinem bisherigen Ordner, damit der Link gleich bleibt.
 
 ## Neues Spiel anlegen
-Alle Spiele entstehen aus der Vorlage `vorlage/index.html` (Grundlage: Claude-Version v7). Spielablauf und Gestaltung sind darin festgelegt; geändert wird nur der Inhaltsblock am Anfang der Datei.
+Alle Spiele entstehen aus der Vorlage `vorlage/index.html` (Grundlage: Claude-Version v8 vom 04.11.2026; seit v8 passt sich die Kartenhöhe in Stufe 1 dem längsten Text an, damit nichts überläuft). Spielablauf und Gestaltung sind darin festgelegt; geändert wird nur der Inhaltsblock am Anfang der Datei.
 
 1. Ordner `spiele/<datum>-<thema>/` anlegen, z. B. `spiele/2026-10-16-wiederholung/` (Kleinbuchstaben, Bindestriche, keine Umlaute).
 2. `vorlage/index.html` als `index.html` in diesen Ordner kopieren.

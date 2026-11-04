@@ -8,7 +8,7 @@
    INHALT DES SPIELS – NUR DIESEN BLOCK ÄNDERN
    Alles unterhalb dieses Blocks (Spielmechanik, Gestaltung, Prüfung)
    bleibt unverändert. Vorlage: tonchime/lernspiele, vorlage/index.html
-   (Grundlage: Claude-Version v7 vom 10.10.2026).
+   (Grundlage: Claude-Version v8 vom 04.11.2026).
 
    Schreibweise:
    - Minuszeichen als „−“ oder „-“; beides wird beim Prüfen gleich gewertet.
@@ -25,7 +25,7 @@ const SPIEL={
   fach:"Elektrotechnik",
   untertitel:"Unbelasteter und belasteter Spannungsteiler · Querstrom",
   datum:"2026-11-05",                            // Unterrichtsdatum
-  version:"Claude-Version · v3",                 // sichtbare Versionsmarke oben rechts
+  version:"Claude-Version · v4",                 // sichtbare Versionsmarke oben rechts
   beispielkarten:["Spannungsteiler","Reihenschaltung von R₁ und R₂"], // die zwei Mini-Karten auf der Kachel von Stufe 1
 
   // Stufe 1: Paare zuordnen [linke Karte, passende Karte]
@@ -128,7 +128,7 @@ function go(n,task=true){if(n>unlocked&&n<4)return;stage=n;selected=null;status(
 document.querySelectorAll('.tile').forEach(t=>t.onclick=()=>go(+t.dataset.stage));$('back').onclick=()=>go(0,false);$('info').onclick=()=>showDialog('Aufgabe',TASK[stage]);$('help').onclick=()=>showDialog('Hilfe',HELP[stage]);
 $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{status('Vollbild ist in diesem Browser nicht verfügbar.')}};
 function unitHeight(u){return ch*u.cards.length+(u.cards.length===2?pg:0)}
-function dimensions(){const w=board.clientWidth,phone=w<620;const cols=phone?3:Math.min(4,Math.floor(w/245));const gap=phone?(w<340?6:8):32;cw=Math.min(240,Math.floor((w-(cols+1)*gap)/cols));ch=phone?44:56;pg=phone?2:4;fs=phone?(w<340?11:12):Math.min(18,Math.max(13,Math.round(cw/12)));board.style.setProperty('--cw',cw+'px');board.style.setProperty('--ch',ch+'px');board.style.setProperty('--pg',pg+'px');board.style.setProperty('--fs',fs+'px');return {w,cols,gap,phone}}
+function dimensions(){const w=board.clientWidth,phone=w<620;const cols=phone?3:Math.min(4,Math.floor(w/245));const gap=phone?(w<340?6:8):32;cw=Math.min(240,Math.floor((w-(cols+1)*gap)/cols));ch=phone?44:56;pg=phone?2:4;fs=phone?(w<340?11:12):Math.min(18,Math.max(13,Math.round(cw/12)));const probe=document.createElement('div');probe.className='card';probe.style.cssText='position:absolute;left:-9999px;top:0;visibility:hidden;height:auto;width:'+cw+'px;font-size:'+fs+'px';board.append(probe);let need=0;PAIRS.forEach(p=>p.forEach(t=>{probe.textContent=t;need=Math.max(need,probe.offsetHeight)}));probe.remove();ch=Math.max(ch,need);board.style.setProperty('--cw',cw+'px');board.style.setProperty('--ch',ch+'px');board.style.setProperty('--pg',pg+'px');board.style.setProperty('--fs',fs+'px');return {w,cols,gap,phone}}
 function build(){units=shuffle(PAIRS.flatMap((p,k)=>p.map((text,side)=>({id:++uid,cards:[{text,k,side}],state:'',x:0,y:0,rot:Math.round((Math.random()*4-2)*10)/10,z:++zTop}))));render();arrange(true)}
 function render(){if(drag)clearDrag();board.replaceChildren();units.forEach(u=>{const wrap=document.createElement('div');wrap.className='unit'+(u.cards.length===2?' pair':'')+(u.state==='good'?' good':u.state==='bad'?' bad':'');wrap.dataset.unit=u.id;u.el=wrap;u.cards.forEach(c=>{const b=document.createElement('button');b.className='card'+(c.side?' solution':'');b.textContent=c.text;b.setAttribute('aria-label',c.text+(u.cards.length===2?', verbunden mit '+u.cards.find(o=>o!==c).text:''));b.setAttribute('aria-pressed',selected===u?'true':'false');b.addEventListener('pointerdown',e=>startDrag(e,u));b.onclick=()=>{if(skipClick){skipClick=false;return}tap(u)};wrap.append(b)});if(u.cards.length===2){const split=document.createElement('button');split.className='split';split.textContent='';split.setAttribute('aria-label','Paar trennen: '+u.cards[0].text+' und '+u.cards[1].text);split.title='Paar trennen';split.disabled=u.state==='good';split.onclick=()=>separate(u);wrap.append(split)}board.append(wrap);place(u)});refreshSelection()}
 function place(u){u.el.style.transform=`translate(${u.x}px,${u.y}px)`+(u.cards.length===1&&u.rot?` rotate(${u.rot}deg)`:'');u.el.style.height=unitHeight(u)+'px';u.el.style.zIndex=u.z||1}

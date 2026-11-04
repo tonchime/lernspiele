@@ -6,7 +6,7 @@ Interaktive Lernspiele für den Mathematikunterricht – direkt im Browser, ohne
 | Spiel | Unterrichtsdatum | Schülerlink |
 |---|---|---|
 | Wheatstone-Brücke (Elektrotechnik: Brückenspannung, Abgleich, Abgleichbedingung; Claude-Version · v1, aus gemeinsamer Vorlage) | 06.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-06-et-wheatstone-bruecke/ |
-| Spannungsteiler und Brückenschaltung (Elektrotechnik: Spannungsteiler, Querstrom, Abgleich der Brücke; Claude-Version · v1, aus gemeinsamer Vorlage) | 05.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-05-et-spannungsteiler-bruecke/ |
+| Spannungsteiler und Potenziale (Elektrotechnik: Teilspannung, Potenzial, zwei Spannungsteiler an einer Quelle als Vorbereitung auf die Brückenschaltung; Claude-Version · v2, aus gemeinsamer Vorlage) | 05.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-05-et-spannungsteiler-bruecke/ |
 | Parallelschaltung und Knotenpunktregel (Elektrotechnik: Parallelschaltung, Ersatzwiderstand, Stromteiler; Claude-Version · v1, aus gemeinsamer Vorlage) | 03.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-03-et-parallelschaltung/ |
 | Zuordnungen: Tabelle und Koordinaten (Mathematik 11AI1: Punkte im Koordinatensystem, Wertetabellen, Einstieg Zuordnungen und Funktionen; Claude-Version · v1, aus gemeinsamer Vorlage) | 02.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-02-zuordnungen/ |
 | Grundschaltungen und Ohmsches Gesetz (Elektrotechnik: Reihenschaltung, Parallelschaltung, Vorwiderstand; Claude-Version · v2, aus gemeinsamer Vorlage) | 02.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-02-et-grundschaltungen/ |

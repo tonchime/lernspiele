@@ -21,11 +21,11 @@
    - Stufe 1: höchstens 6 Paare, damit alles ohne Scrollen auf das Handy passt.
    =================================================================== */
 const SPIEL={
-  titel:"Spannungsteiler und Potenziale",         // Spieltitel
+  titel:"Spannungsteiler",                        // Spieltitel
   fach:"Elektrotechnik",
-  untertitel:"Teilspannung · Potenzial · zwei Spannungsteiler an einer Quelle",
+  untertitel:"Unbelasteter und belasteter Spannungsteiler · Querstrom",
   datum:"2026-11-05",                            // Unterrichtsdatum
-  version:"Claude-Version · v2",                 // sichtbare Versionsmarke oben rechts
+  version:"Claude-Version · v3",                 // sichtbare Versionsmarke oben rechts
   beispielkarten:["Spannungsteiler","Reihenschaltung von R₁ und R₂"], // die zwei Mini-Karten auf der Kachel von Stufe 1
 
   // Stufe 1: Paare zuordnen [linke Karte, passende Karte]
@@ -34,36 +34,37 @@ const SPIEL={
     ["Unbelasteter Spannungsteiler","Am Ausgang ist keine Last angeschlossen"],
     ["Belasteter Spannungsteiler","Die Ausgangsspannung sinkt mit dem Laststrom"],
     ["Querstrom","Strom durch R₂ beim belasteten Spannungsteiler"],
-    ["Potenzial","Spannung eines Punktes gegenüber dem Bezugspunkt"],
-    ["Spannung zwischen zwei Punkten","Differenz der beiden Potenziale"]
+    ["Laststrom","Strom durch den Verbraucher am Ausgang"],
+    ["Querstromverhältnis q","Querstrom geteilt durch Laststrom"]
   ],
 
   // Stufe 2: Zeilen mit Auswahllisten [Zeile, grauer Hinweis rechts (optional)]
   stufe2:[
     ["Unbelasteter Spannungsteiler mit R₁ = R₂ an U = 12 V: Die Spannung an R₂ beträgt [*6 V|12 V|3 V]","gleiche Widerstände"],
     ["Wird R₂ größer, wird die Ausgangsspannung U₂ [*größer|kleiner|nicht verändert]","Teilspannung an R₂"],
-    ["Zwei Spannungsteiler liegen parallel an derselben Quelle. Beide Abgriffe haben gegenüber Minus das Potenzial 6 V. Die Spannung zwischen den Abgriffen beträgt [*0 V|6 V|12 V]","Potenzialdifferenz"],
-    ["Abgriff A hat das Potenzial 8 V, Abgriff B das Potenzial 6 V. Die Spannung zwischen A und B beträgt [*2 V|14 V|6 V]","Potenzialdifferenz"],
-    ["Ein Spannungsmesser zwischen den Abgriffen A und B zeigt 0 V, wenn die Potenziale von A und B [*gleich groß|verschieden|beide null] sind","Spannungsmesser"],
+    ["Wird ein Verbraucher parallel zu R₂ angeschlossen, wird U₂ [*kleiner|größer|nicht verändert]","belasteter Teiler"],
+    ["Querstrom 100 mA, Laststrom 20 mA: q = [*5|0,2|120]","Querstromverhältnis"],
+    ["In der Praxis wählt man das Querstromverhältnis q etwa [*2 bis 10|0,1 bis 1|50 bis 100]","Tabellenbuch"],
     ["Fehlersuche: Für R₁ = 1 kΩ und R₂ = 3 kΩ an U = 12 V rechnet ein Azubi U₂ = 3 V. Richtig ist U₂ = [*9 V|3 V|4 V]","typischer Fehler"]
   ],
 
   // Stufe 3: Aufgaben mit Eingabefeldern (nur Zahlen eingeben, Einheit steht dahinter)
   stufe3:[
-    {gleichung:"Spannungsteiler 1: U = 12 V, R₁ = 1 kΩ, R₂ = 2 kΩ", schritte:["Spannung an R₂: U₂ = {8} V"], loesungen:[]},
-    {gleichung:"Spannungsteiler 2 an derselben Quelle: U = 12 V, R₃ = 3 kΩ, R₄ = 6 kΩ", schritte:["Spannung an R₄: U₄ = {8} V","Spannung zwischen den Abgriffen A (an R₂) und B (an R₄): {0} V"], loesungen:[]},
-    {gleichung:"Spannungsteiler 2 verändert: R₃ = 2 kΩ, R₄ = 6 kΩ (U = 12 V, Teiler 1 unverändert)", schritte:["Spannung an R₄: U₄ = {9} V","Spannung zwischen den Abgriffen A und B: {1} V"], loesungen:[]},
-    {gleichung:"Für Schnelle – Überlegung im Heft (wird hier nicht automatisch geprüft)", schritte:[
-      "Bei welchem Verhältnis von R₃ zu R₄ wird die Spannung zwischen A und B wieder 0 V? Begründen Sie.",
-      "R₄ sei ein temperaturabhängiger Widerstand. Was passiert mit der Spannung zwischen A und B, wenn er sich erwärmt?",
-      "Transfer: Wie könnte man mit dieser Schaltung eine Temperatur überwachen? Notieren Sie eine Idee."
+    {gleichung:"Unbelasteter Spannungsteiler: U = 24 V, R₁ = 2 kΩ, R₂ = 1 kΩ", schritte:["Ausgangsspannung U₂ = {8} V"], loesungen:[]},
+    {gleichung:"Potenziometer 1 kΩ an U = 10 V, Abgriff bei R₁ = 400 Ω und R₂ = 600 Ω", schritte:["Ausgangsspannung U₂ = {6} V"], loesungen:[]},
+    {gleichung:"Belasteter Spannungsteiler: Querstrom 150 mA, Laststrom 50 mA", schritte:["Querstromverhältnis q = {3}","Strom durch R₁: I = {200} mA"], loesungen:[]},
+    {gleichung:"Für Schnelle – Untersuchung im Heft (wird hier nicht automatisch geprüft)", schritte:[
+      "Fall 1: Potenziometer von oben (R₁ = 400 Ω, R₂ = 600 Ω, U = 10 V) mit Last R_L = 600 Ω parallel zu R₂. Berechnen Sie U₂.",
+      "Fall 2: Dieselbe Last an einem Teiler mit R₁ = 40 Ω und R₂ = 60 Ω. Berechnen Sie U₂.",
+      "Transfer: Welcher Teiler hält U₂ bei Belastung stabiler? Begründen Sie mit dem Querstromverhältnis.",
+      "Weiterführend: Welchen Nachteil hat der stabilere Teiler?"
     ], loesungen:[]}
   ],
 
   // Hilfetexte (Glühbirne) je Stufe
-  hilfe1:"Spannungsteiler: Reihenschaltung von R₁ und R₂, die Teilspannung U₂ wird an R₂ abgegriffen.\nBelastet: Eine Last parallel zu R₂ verkleinert den unteren Widerstand, U₂ sinkt; der Strom durch R₂ heißt Querstrom.\nPotenzial: Spannung eines Punktes gegen den Bezugspunkt (Minuspol). Die Spannung zwischen zwei Punkten ist die Differenz ihrer Potenziale.",
-  hilfe2:"Unbelasteter Teiler: U₂ = U · R₂ / (R₁ + R₂). Bei R₁ = R₂ ist U₂ die halbe Spannung.\nSpannung zwischen A und B: U_AB = φ_A − φ_B. Gleiche Potenziale ergeben 0 V.\nJe größer R₂ im Vergleich zu R₁, desto größer der Anteil von U an R₂.",
-  hilfe3:"U₂ = U · R₂ / (R₁ + R₂); bei 1 kΩ und 2 kΩ sind das zwei Drittel von U.\nU₄ = U · R₄ / (R₃ + R₄).\nSpannung zwischen den Abgriffen: U_AB = U₂ − U₄ (Potenziale gegen Minus).\nGeben Sie nur die Zahl ein, die Einheit steht schon da. Komma oder Punkt sind beide möglich.\nFür Schnelle: Überlegung ins Heft, Besprechung in der Sicherung."
+  hilfe1:"Spannungsteiler: Reihenschaltung von R₁ und R₂, die Teilspannung U₂ wird an R₂ abgegriffen.\nBelastet: Eine Last parallel zu R₂ verkleinert den unteren Widerstand, U₂ sinkt. Der Strom durch R₂ heißt Querstrom, der Strom durch die Last Laststrom.\nq = Querstrom / Laststrom.",
+  hilfe2:"Unbelastet: U₂ = U · R₂ / (R₁ + R₂). Bei R₁ = R₂ ist U₂ die halbe Spannung.\nJe größer R₂ im Vergleich zu R₁, desto größer der Anteil von U an R₂.\nQuerstromverhältnis: q = Querstrom / Laststrom; praxisüblich 2 bis 10.",
+  hilfe3:"U₂ = U · R₂ / (R₁ + R₂); bei 2 kΩ und 1 kΩ ist das ein Drittel von U.\nPotenziometer: R₁ + R₂ = 1 kΩ, U₂ = U · R₂ / 1 kΩ.\nDurch R₁ fließt Querstrom plus Laststrom.\nGeben Sie nur die Zahl ein, die Einheit steht schon da. Komma oder Punkt sind beide möglich.\nFür Schnelle: Lastwiderstand parallel zu R₂ ersetzen (Parallelschaltung), dann Spannungsteiler rechnen. Begründung ins Heft, Besprechung in der Sicherung."
 };
 /* ======================= ENDE DES INHALTSBLOCKS ===================== */
 </script>

@@ -5,6 +5,7 @@ Interaktive Lernspiele für den Mathematikunterricht – direkt im Browser, ohne
 
 | Spiel | Unterrichtsdatum | Schülerlink |
 |---|---|---|
+| Startwert und Änderung (Mathematik 11AI1: Werte aus Startwert und Änderung berechnen, Tabellen lesen, rückwärts rechnen; Einstieg vor AB 3 Funktionsgleichung; Claude-Version · v1, aus gemeinsamer Vorlage) | 06.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-06-funktionsgleichung/ |
 | Wheatstone-Brücke (Elektrotechnik: Brückenspannung, Abgleich, Abgleichbedingung; Claude-Version · v1, aus gemeinsamer Vorlage) | 06.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-06-et-wheatstone-bruecke/ |
 | Spannungsteiler (Elektrotechnik: unbelasteter und belasteter Spannungsteiler, Querstrom und Querstromverhältnis als Vorwissen vor der Brückenschaltung; Claude-Version · v4, aus gemeinsamer Vorlage v8) | 05.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-05-et-spannungsteiler-bruecke/ |
 | Parallelschaltung und Knotenpunktregel (Elektrotechnik: Parallelschaltung, Ersatzwiderstand, Stromteiler; Claude-Version · v1, aus gemeinsamer Vorlage) | 03.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-03-et-parallelschaltung/ |

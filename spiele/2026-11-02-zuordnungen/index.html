@@ -25,7 +25,7 @@ const SPIEL={
   fach:"Mathematik",
   untertitel:"Punkte · Wertetabellen · Rechnen mit Grundwert und Rate",
   datum:"2026-11-02",                            // Unterrichtsdatum
-  version:"Claude-Version · v1",                 // sichtbare Versionsmarke oben rechts
+  version:"Claude-Version · v2",                 // sichtbare Versionsmarke oben rechts
   beispielkarten:["(2 | 5)","rechts 2, oben 5"], // die zwei Mini-Karten auf der Kachel von Stufe 1
 
   // Stufe 1: Paare zuordnen [linke Karte, passende Karte]
@@ -40,12 +40,12 @@ const SPIEL={
 
   // Stufe 2: Zeilen mit Auswahllisten [Zeile, grauer Hinweis rechts (optional)]
   stufe2:[
-    ["Eine Kerze ist 20 cm lang. Pro Stunde brennen 2 cm ab.","Werte"],
-    ["Nach 1 Stunde: 20 − 2 = [*18|22|2] cm"],
-    ["Nach 3 Stunden: 20 − 3 · 2 = [*14|34|6] cm","Punktrechnung vor Strichrechnung"],
-    ["Im Punkt (3 | 14) ist 3 die [*Zeit|Länge]"],
-    ["Fehlersuche: Für (3 | 14) geht jemand zuerst 14 nach rechts. Richtig: zuerst [*3|14] nach rechts","typischer Fehler"],
-    ["Taxi: 4 € Grundpreis und 2 € pro km. 5 km kosten [*14 €|10 €|30 €]","Grundpreis nicht vergessen"]
+    ["Kerze A ist 20 cm lang. Pro Stunde brennen 2 cm ab.","Werte"],
+    ["Nach 2,5 Stunden ist die Kerze [*15|17,5|5] cm lang"],
+    ["Nur noch 5 cm lang ist sie nach [*7,5|15|10] Stunden","Wie viel ist abgebrannt?"],
+    ["Zur Kerze passt der Punkt (5 | [*10|15|5])","(Zeit | Länge)"],
+    ["Kerze B ist 26 cm lang, pro Stunde brennen 3 cm ab. Nach 8 Stunden ist [*Kerze A|Kerze B|keine von beiden] länger","beide Längen ausrechnen"],
+    ["Taxi: 4 € Grundpreis und 2 € pro km. 7,5 km kosten [*19 €|15 €|45 €]","Grundpreis nicht vergessen"]
   ],
 
   // Stufe 3: Aufgaben mit Eingabefeldern (nur Zahlen eingeben, Einheit steht dahinter)
@@ -57,8 +57,8 @@ const SPIEL={
 
   // Hilfetexte (Glühbirne) je Stufe
   hilfe1:"Ein Punkt (x | y): erste Zahl nach rechts, zweite Zahl nach oben.\nIst die erste Zahl 0, liegt der Punkt auf der senkrechten Achse.\nPunktrechnung vor Strichrechnung: erst 3 · 10, dann 100 − 30.",
-  hilfe2:"Jede Stunde werden 2 cm abgezogen: nach 3 Stunden 3 · 2 = 6 cm.\nIm Punkt (Zeit | Länge) steht zuerst die Zeit.\nTaxi: Grundpreis + Preis pro km · Kilometer.",
-  hilfe3:"Kerze: 20 − Stunden · 2.\nEimer: 5 + Minuten · 3.\nTaxi A: 4 + 2 · km, Taxi B: 8 + 1 · km.\nGeben Sie nur die Zahl ein, die Einheit steht schon da. Komma oder Punkt sind beide möglich.\nFür Schnelle: Begründung ins Heft, Besprechung später."
+  hilfe2:"Erst überlegen: Wie viel cm sind schon abgebrannt? Das dann von der Anfangslänge abziehen.\nUmgekehrt: Wie viel cm müssen abbrennen? Wie viele Stunden dauert das?\nIm Punkt (Zeit | Länge) steht zuerst die Zeit.\nTaxi: Grundpreis plus Preis für alle Kilometer.",
+  hilfe3:"Kerze: erst ausrechnen, wie viel in dieser Zeit abbrennt, dann von 20 cm abziehen.\nEimer: zum Anfangswert kommt pro Minute die gleiche Menge dazu.\nTaxi: Grundpreis plus Preis für alle Kilometer, für A und B getrennt rechnen.\nGeben Sie nur die Zahl ein, die Einheit steht schon da. Komma oder Punkt sind beide möglich.\nFür Schnelle: Begründung ins Heft, Besprechung später."
 };
 /* ======================= ENDE DES INHALTSBLOCKS ===================== */
 </script>

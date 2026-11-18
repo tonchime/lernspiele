@@ -21,45 +21,46 @@
    - Stufe 1: höchstens 6 Paare, damit alles ohne Scrollen auf das Handy passt.
    =================================================================== */
 const SPIEL={
-  titel:"Gleichungen lösen",                     // Spieltitel
+  titel:"m und b erkennen",                      // Spieltitel
   fach:"Mathematik",
-  untertitel:"Gleichung und Lösung zuordnen · zwei Tarife vergleichen · Lösungen selbst bestimmen",
+  untertitel:"m und b zuordnen · Preis und Gleichung · m und b selbst bestimmen",
   datum:"2026-11-27",                            // Unterrichtsdatum
-  version:"Claude-Version · v1",                 // sichtbare Versionsmarke oben rechts
-  beispielkarten:["2\u00a0·\u00a0x\u00a0=\u00a08","4"],   // die zwei Mini-Karten auf der Kachel von Stufe 1 (kurz und mit festen Leerzeichen, damit auf dem Handy nichts umbricht)
+  version:"Claude-Version · v2",                 // sichtbare Versionsmarke oben rechts
+  beispielkarten:["3\u00a0·\u00a0x\u00a0+\u00a05","m\u00a0=\u00a03"],   // die zwei Mini-Karten auf der Kachel von Stufe 1 (kurz und mit festen Leerzeichen, damit auf dem Handy nichts umbricht)
 
-  // Stufe 1: Paare zuordnen [linke Karte, passende Karte]
+  // Stufe 1: Paare zuordnen [linke Karte, passende Karte]; feste Leerzeichen (\\u00a0), damit die zweizeiligen Karten nach dem Komma umbrechen
   paare:[
-    ["2 · x − 6 = 0","x = 3"],
-    ["−4 · x + 20 = 0","x = 5"],
-    ["5 · x = 3 · x + 8","x = 4"],
-    ["4 · x + 12 = 6 · x","x = 6"],
-    ["3 · x + 2 = 2 · x + 9","x = 7"],
-    ["−2 · x + 8 = 2 · x","x = 2"]
+    ["f(x) = 2 · x + 4","m = 2 und b = 4"],
+    ["f(x) = 4 · x + 2","m = 4 und b = 2"],
+    ["f(x) = −2 · x + 8","m = −2 und b = 8"],
+    ["f(x) = 6 + 3 · x","m = 3 und b = 6"],
+    ["Grundpreis 10 €, je\u00a0GB\u00a02\u00a0€","m = 2 und b = 10"],
+    ["Anmeldung 0 €, je\u00a0Monat\u00a09\u00a0€","m = 9 und b = 0"]
   ],
 
   // Stufe 2: Zeilen mit Auswahllisten [Zeile, grauer Hinweis rechts (optional)]
   stufe2:[
-    ["Tarif A: 10&nbsp;€ Grundpreis und 2&nbsp;€ je GB"],
-    ["Tarif B: kein Grundpreis und 4&nbsp;€ je GB"],
-    ["2,5 GB kosten bei Tarif A [5 €|*15 €|12,50 €]"],
-    ["Bei 3 GB ist [Tarif A|*Tarif B|keiner] günstiger"],
-    ["Bei 8 GB ist [*Tarif A|Tarif B|keiner] günstiger"],
-    ["Gleich viel kosten beide bei [4 GB|6 GB|*5 GB]","ausprobieren"],
-    ["Fehler finden: Ein Mitschüler sagt, 6 GB kosten bei Tarif A 12&nbsp;€. Richtig sind [24 €|*22 €|16 €]","Grundpreis"]
+    ["E-Bike mieten: Grundpreis 6&nbsp;€ und 4&nbsp;€ je Stunde"],
+    ["Die Steigung ist m = [6|*4|10]"],
+    ["Der y-Achsenabschnitt ist b = [*6|4|0]"],
+    ["Die Gleichung lautet f(x) = [6 · x + 4|4 · x|*4 · x + 6]"],
+    ["Für 2,5 Stunden zahlen Sie [10 €|*16 €|19 €]"],
+    ["Mit 30&nbsp;€ können Sie [5|7,5|*6] Stunden fahren","rückwärts rechnen"],
+    ["Fehler finden: Ein Mitschüler sagt, bei f(x) = 3 + 5 · x ist m = 3. Richtig ist m = [*5|8|3]","Zahl vor dem x"],
+    ["Ein anderer Verleih nimmt keinen Grundpreis und 5&nbsp;€ je Stunde. Dort ist b = [5|*0|1]"]
   ],
 
   // Stufe 3: Aufgaben mit Eingabefeldern (nur Zahlen eingeben)
   stufe3:[
-    {gleichung:"Ein Guthaben von 60&nbsp;€ wird jeden Monat 5&nbsp;€ kleiner", schritte:["Nach 4 Monaten sind es noch {40} €","Leer ist es nach {12} Monaten"], loesungen:[]},
-    {gleichung:"Für welche Zahl x sind beide Seiten gleich groß?", schritte:["7 · x = 4 · x + 12 &nbsp; → &nbsp; x = {4}","3 · x + 10 = 5 · x &nbsp; → &nbsp; x = {5}"], loesungen:[]},
-    {gleichung:"Für Schnelle – Sie haben 40&nbsp;€ und sparen 10&nbsp;€ je Woche · Ihr Freund hat 100&nbsp;€ und spart 5&nbsp;€ je Woche", schritte:["Nach 4 Wochen haben Sie {80} €","Ihr Freund hat nach 4 Wochen {120} €","Gleich viel haben beide nach {12} Wochen","Im Heft: Ihr Freund spart jetzt auch 10&nbsp;€ je Woche. Wann haben beide gleich viel? Begründen Sie."], loesungen:[]}
+    {gleichung:"Lieferdienst: Liefergebühr 3&nbsp;€ und 8&nbsp;€ je Pizza", schritte:["m = {8}","b = {3}","4 Pizzen kosten mit Lieferung {35} €"], loesungen:[]},
+    {gleichung:"Eine Gerade geht durch (0 | 5) und (2 | 11)", schritte:["b = {5}","m = {3}","An der Stelle x = 20 hat sie den Wert {65}"], loesungen:[]},
+    {gleichung:"Für Schnelle – Tarif A: Grundpreis 12&nbsp;€ und 1&nbsp;€ je GB · Tarif B: kein Grundpreis und 3&nbsp;€ je GB", schritte:["Tarif A: m = {1} und b = {12}","Tarif B: m = {3} und b = {0}","4 GB kosten bei Tarif A {16} € und bei Tarif B {12} €","Gleich viel kosten beide bei {6} GB","Im Heft: Ab wie vielen GB ist Tarif A günstiger? Begründen Sie."], loesungen:[]}
   ],
 
   // Hilfetexte (Glühbirne) je Stufe
-  hilfe1:"Setzen Sie die Zahl für x ein. Rechnen Sie beide Seiten aus.\n5 · x = 3 · x + 8 mit x = 4: links 5 · 4 = 20, rechts 3 · 4 + 8 = 20.\nBeide Seiten sind gleich groß: Die Zahl passt.\nSteht rechts 0, muss auch links 0 herauskommen.",
-  hilfe2:"Kosten: Grundpreis plus Preis je GB mal Anzahl der GB.\nTarif A bei 3 GB: 10 + 2 · 3. Tarif B bei 3 GB: 4 · 3.\nGünstiger heißt: kostet weniger.\nGleich viel: beide Tarife für 4, 5 und 6 GB ausrechnen.\nFehler finden: Der Grundpreis kommt immer dazu.",
-  hilfe3:"Guthaben: jeden Monat 5 € weniger. Leer heißt 0 €.\nGleichungen: Zahlen ausprobieren oder auf beiden Seiten gleich viele x abziehen: 7 · x = 4 · x + 12 wird zu 3 · x = 12.\nFür Schnelle: Am Anfang fehlen Ihnen 60 €. Jede Woche holen Sie 5 € auf.\nGeben Sie nur die Zahl ein.\nIm Heft: Begründung ins Heft, Besprechung später."
+  hilfe1:"f(x) = m · x + b: m ist die Zahl vor dem x, b ist die Zahl ohne x.\nDie Reihenfolge ist egal: f(x) = 6 + 3 · x hat m = 3 und b = 6.\nDas Minus gehört zur Zahl: Bei −2 · x ist m = −2.\nIm Alltag: m ist die Änderung je Schritt (je GB, je Monat). b ist der Startwert (Grundpreis, Anmeldung).",
+  hilfe2:"m ist der Preis je Stunde, b ist der Grundpreis.\n2,5 Stunden: 4 · 2,5 + 6.\nRückwärts: erst den Grundpreis abziehen, dann durch den Preis je Stunde teilen.\nFehler finden: m ist die Zahl vor dem x, auch wenn sie hinten steht.\nKein Grundpreis: Bei x = 0 kostet es nichts.",
+  hilfe3:"Die Liefergebühr zahlen Sie einmal: Das ist b. Je Pizza kommt gleich viel dazu: Das ist m.\nGerade: Der Punkt mit x = 0 zeigt b. Von x = 0 bis x = 2 geht es 6 nach oben: m = 6 : 2.\nTarife: Kosten = m · x + b. Gleich viel: beide Tarife für 4, 5, 6 und 7 GB ausrechnen.\nGeben Sie nur die Zahl ein.\nIm Heft: Begründung ins Heft, Besprechung später."
 };
 /* ======================= ENDE DES INHALTSBLOCKS ===================== */
 </script>

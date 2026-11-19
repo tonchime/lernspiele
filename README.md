@@ -5,6 +5,7 @@ Interaktive Lernspiele für den Mathematikunterricht – direkt im Browser, ohne
 
 | Spiel | Unterrichtsdatum | Schülerlink |
 |---|---|---|
+| Gleichungen lösen (Mathematik 11AI1: lineare Gleichung = 0 und Lösung zuordnen, Schritt für Schritt lösen, Wann ist es 0?; Einstieg vor AB 12/13 Nullstelle berechnen; Claude-Version · v1, aus gemeinsamer Vorlage) | 20.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-20-nullstelle/ |
 | m und b erkennen (Mathematik 11AI1: Gleichung oder Preisangabe und m, b zuordnen, Preis und Gleichung, m und b selbst bestimmen; Einstieg vor AB 10 Schnittpunkt zweier Geraden; Claude-Version · v2 vom 18.11.2026, bis v1 „Gleichungen lösen“; aus gemeinsamer Vorlage) | 27.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-27-schnittpunkt/ |
 | Steigung und y-Achsenabschnitt (Mathematik 11AI1: Beschreibung und Gleichung zuordnen, Gerade aus zwei Punkten, Gleichungen vergleichen; Einstieg zur Wiederholung vor AB 6/7; Claude-Version · v1, aus gemeinsamer Vorlage) | 13.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-13-steigung-wiederholung/ |
 | Gerade aus zwei Punkten (Mathematik 11AI1: zwei Punkte und Gleichung zuordnen, Steigung und y-Achsenabschnitt aus zwei Punkten, Geraden vergleichen; Einstieg vor AB 8/9; Claude-Version · v1, aus gemeinsamer Vorlage) | 16.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-16-zwei-punkte/ |

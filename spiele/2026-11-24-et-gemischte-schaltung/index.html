@@ -23,9 +23,9 @@
 const SPIEL={
   titel:"Gemischte Schaltung",                    // Spieltitel
   fach:"Elektrotechnik",
-  untertitel:"Reihe und parallel erkennen · Ersatzwiderstand · Fehlersuche",
+  untertitel:"Reihe und parallel erkennen · Ersatzwiderstand · Messung vorbereiten",
   datum:"2026-11-24",                            // Unterrichtsdatum
-  version:"Claude-Version · v1",                 // sichtbare Versionsmarke oben rechts
+  version:"Claude-Version · v2",                 // sichtbare Versionsmarke oben rechts
   beispielkarten:["20 Ω und 40 Ω parallel","13,3 Ω"], // die zwei Mini-Karten auf der Kachel von Stufe 1
 
   // Stufe 1: Paare zuordnen [linke Karte, passende Karte]
@@ -35,7 +35,7 @@ const SPIEL={
     ["20 Ω und 20 Ω in Reihe","40,0 Ω"],
     ["20 Ω und 20 Ω parallel","10,0 Ω"],
     ["20 Ω und 40 Ω parallel","13,3 Ω"],
-    ["Unterbrochener Widerstand","leitet keinen Strom mehr"]
+    ["Sollwert","Wert, den eine fehlerfreie Schaltung hat"]
   ],
 
   // Stufe 2: Zeilen mit Auswahllisten [Zeile, grauer Hinweis rechts (optional)]
@@ -45,26 +45,27 @@ const SPIEL={
     ["Ersatzwiderstand R₁₂ = [10,0 Ω|20,0 Ω|*40,0 Ω]"],
     ["R₁₂ und R₃ sind [in Reihe|*parallel] geschaltet"],
     ["Ersatzwiderstand R₁₂₃ = [60,0 Ω|*13,3 Ω|30,0 Ω]"],
-    ["Ist R₂ unterbrochen, zeigt das Ohmmeter zwischen diesen Klemmen [13,3 Ω|40,0 Ω|*20,0 Ω]","Fehlersuche"],
-    ["Fehlersuche: Für R₁₂₃ wurden 60,0 Ω berechnet, also alle drei Widerstände addiert. Nicht addiert werden darf [R₁|R₂|*R₃]","typischer Fehler"]
+    ["Zwischen den beiden anderen Klemmenpaaren ergibt sich bei fehlerfreien Heizwiderständen [ein größerer|*derselbe|ein kleinerer] Sollwert","drei gleiche Widerstände"],
+    ["Vor der Widerstandsmessung muss der Durchlauferhitzer [eingeschaltet|*freigeschaltet] sein","Sicherheitsregeln"],
+    ["Rechenfehler finden: Für R₁₂₃ wurden 60,0 Ω berechnet, also alle drei Widerstände addiert. Nicht addiert werden darf [R₁|R₂|*R₃]","typischer Fehler"]
   ],
 
   // Stufe 3: Aufgaben mit Eingabefeldern (nur Zahlen eingeben, Einheit steht dahinter)
   stufe3:[
     {gleichung:"R₁ = 120 Ω und R₂ = 180 Ω in Reihe, parallel dazu R₃ = 600 Ω", schritte:["Ersatzwiderstand R₁₂ = {300} Ω","Ersatzwiderstand R₁₂₃ = {200} Ω"], loesungen:[]},
     {gleichung:"R₁ = 300 Ω und R₂ = 600 Ω parallel, in Reihe dazu R₃ = 250 Ω", schritte:["Ersatzwiderstand R₁₂ = {200} Ω","Ersatzwiderstand R₁₂₃ = {450} Ω"], loesungen:[]},
-    {gleichung:"Zwei Widerstände von je 150 Ω in Reihe, parallel dazu 300 Ω", schritte:["Ersatzwiderstand der ganzen Schaltung: {150} Ω","Der 300-Ω-Widerstand ist unterbrochen. Das Ohmmeter zeigt {300} Ω"], loesungen:[]},
+    {gleichung:"Zwei Widerstände von je 150 Ω in Reihe, parallel dazu 300 Ω", schritte:["Ersatzwiderstand der beiden Widerstände in Reihe: {300} Ω","Ersatzwiderstand der ganzen Schaltung: {150} Ω"], loesungen:[]},
     {gleichung:"Für Schnelle – Untersuchung im Heft (wird hier nicht automatisch geprüft)", schritte:[
       "Fall 1: Drei Heizwiderstände von je 30 Ω: zwei in Reihe, der dritte parallel dazu. Berechnen Sie den Ersatzwiderstand.",
       "Fall 2: Jetzt zwei parallel und der dritte in Reihe dazu. Berechnen Sie den Ersatzwiderstand.",
       "Transfer: Welche vier verschiedenen Ersatzwiderstände lassen sich aus drei gleichen Widerständen schalten? Skizzieren Sie die Schaltungen im Heft.",
-      "Weiterführend: Ein Widerstand ist unterbrochen. In welchen der vier Schaltungen fließt trotzdem noch Strom? Begründen Sie im Heft."
+      "Weiterführend: Ordnen Sie die vier Ersatzwiderstände nach der Größe. Begründen Sie im Heft, warum die Parallelschaltung den kleinsten Wert hat."
     ], loesungen:[]}
   ],
 
   // Hilfetexte (Glühbirne) je Stufe
-  hilfe1:"Gemischte Schaltung (Gruppenschaltung): Reihen- und Parallelschaltungen in einer Schaltung.\nZwei gleiche Widerstände: in Reihe doppelter Wert, parallel halber Wert.\nEin unterbrochener Widerstand leitet keinen Strom mehr.",
-  hilfe2:"Von innen nach außen zusammenfassen: zuerst die Widerstände, die eindeutig in Reihe oder parallel liegen.\nReihe: R₁₂ = R₁ + R₂.\nParallel: R₁₂₃ = R₁₂ · R₃ / (R₁₂ + R₃).\nUnterbrochener Widerstand: Sein Zweig fällt weg, es zählt nur der andere Zweig.",
+  hilfe1:"Gemischte Schaltung (Gruppenschaltung): Reihen- und Parallelschaltungen in einer Schaltung.\nZwei gleiche Widerstände: in Reihe doppelter Wert, parallel halber Wert.\nSollwert: der Wert, den die Messung bei einer fehlerfreien Schaltung zeigt.",
+  hilfe2:"Von innen nach außen zusammenfassen: zuerst die Widerstände, die eindeutig in Reihe oder parallel liegen.\nReihe: R₁₂ = R₁ + R₂.\nParallel: R₁₂₃ = R₁₂ · R₃ / (R₁₂ + R₃).\nWiderstände werden nur im spannungsfreien Zustand gemessen: vorher freischalten und gegen Wiedereinschalten sichern.",
   hilfe3:"Reihe: R = R₁ + R₂. Parallel: R = R₁ · R₂ / (R₁ + R₂).\nErst die innere Schaltung zusammenfassen, dann mit dem dritten Widerstand weiterrechnen.\nGeben Sie nur die Zahl ein, die Einheit steht schon da.\nFür Schnelle: Skizzen, Rechnung und Begründung ins Heft, Besprechung in der Sicherung."
 };
 /* ======================= ENDE DES INHALTSBLOCKS ===================== */

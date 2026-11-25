@@ -19,48 +19,56 @@
      ist beim Prüfen egal, doppelte Eingaben werden als falsch erkannt.
    - In Texten ist „ &nbsp; “ ein breiterer Abstand.
    - Stufe 1: höchstens 6 Paare, damit alles ohne Scrollen auf das Handy passt.
+   - Nur in diesem Spiel (seit v3 vom 25.11.2026): „zeichnung2“ zeigt über den Zeilen von
+     Stufe 2 ein Kästchenfeld mit Achsen (je Kästchen 1) und Geraden; jede Gerade als
+     [Name, x1, y1, x2, y2] mit beiden Endpunkten auf Kästchenkreuzungen. Dafür sind unter
+     dem Inhaltsblock die Funktion plot() und die Regeln .plotbox/.plot ergänzt; außerdem
+     bleibt ein Punkt mit Feld wie (0 | {3}) in Stufe 2 und 3 in einer Zeile (Regel .nb).
+     Spielablauf und Prüfung sind unverändert. Die Vorlage kann das (noch) nicht.
    =================================================================== */
 const SPIEL={
-  titel:"m und b erkennen",                      // Spieltitel
+  titel:"Punkte auf Geraden",                    // Spieltitel
   fach:"Mathematik",
-  untertitel:"m und b zuordnen · Preis und Gleichung · m und b selbst bestimmen",
+  untertitel:"Gleichung und Punkte zuordnen · Punkte ablesen · Punkte berechnen",
   datum:"2026-11-27",                            // Unterrichtsdatum
-  version:"Claude-Version · v2",                 // sichtbare Versionsmarke oben rechts
-  beispielkarten:["3\u00a0·\u00a0x\u00a0+\u00a05","m\u00a0=\u00a03"],   // die zwei Mini-Karten auf der Kachel von Stufe 1 (kurz und mit festen Leerzeichen, damit auf dem Handy nichts umbricht)
+  version:"Claude-Version · v3",                 // sichtbare Versionsmarke oben rechts
+  beispielkarten:["2\u00a0·\u00a0x\u00a0+\u00a04","(2\u00a0|\u2060\u00a08)"],   // die zwei Mini-Karten auf der Kachel von Stufe 1 (kurz und mit festen Leerzeichen, damit auf dem Handy nichts umbricht)
 
-  // Stufe 1: Paare zuordnen [linke Karte, passende Karte]; feste Leerzeichen (\\u00a0), damit die zweizeiligen Karten nach dem Komma umbrechen
+  // Stufe 1: Paare zuordnen [linke Karte, passende Karte]; feste Leerzeichen (\\u00a0) und hinter dem Strich ein unsichtbares Verbindungszeichen (\\u2060), damit ein Punkt nie mitten in der Klammer umbricht
   paare:[
-    ["f(x) = 2 · x + 4","m = 2 und b = 4"],
-    ["f(x) = 4 · x + 2","m = 4 und b = 2"],
-    ["f(x) = −2 · x + 8","m = −2 und b = 8"],
-    ["f(x) = 6 + 3 · x","m = 3 und b = 6"],
-    ["Grundpreis 10 €, je\u00a0GB\u00a02\u00a0€","m = 2 und b = 10"],
-    ["Anmeldung 0 €, je\u00a0Monat\u00a09\u00a0€","m = 9 und b = 0"]
+    ["f(x) = 2 · x + 4","(0\u00a0|\u2060\u00a04) und (2\u00a0|\u2060\u00a08)"],
+    ["f(x) = 4 · x + 2","(0\u00a0|\u2060\u00a02) und (2\u00a0|\u2060\u00a010)"],
+    ["f(x) = 4 + 3 · x","(0\u00a0|\u2060\u00a04) und (2\u00a0|\u2060\u00a010)"],
+    ["f(x) = −2 · x + 8","(0\u00a0|\u2060\u00a08) und (2\u00a0|\u2060\u00a04)"],
+    ["Grundpreis 10 €, je\u00a0GB\u00a02\u00a0€","(0\u00a0|\u2060\u00a010) und (5\u00a0|\u2060\u00a020)"],
+    ["Anmeldung 0 €, je\u00a0Monat\u00a09\u00a0€","(0\u00a0|\u2060\u00a00) und (2\u00a0|\u2060\u00a018)"]
   ],
+
+  // Zeichnung über den Zeilen von Stufe 2: Kästchen 0 bis xmax und 0 bis ymax, je Kästchen 1; Geraden [Name, x1, y1, x2, y2]
+  zeichnung2:{xmax:6, ymax:8, geraden:[["f",0,3,5,8],["g",0,0,4,8]], alt:"Koordinatensystem mit den Geraden f und g"},
 
   // Stufe 2: Zeilen mit Auswahllisten [Zeile, grauer Hinweis rechts (optional)]
   stufe2:[
-    ["E-Bike mieten: Grundpreis 6&nbsp;€ und 4&nbsp;€ je Stunde"],
-    ["Die Steigung ist m = [6|*4|10]"],
-    ["Der y-Achsenabschnitt ist b = [*6|4|0]"],
-    ["Die Gleichung lautet f(x) = [6 · x + 4|4 · x|*4 · x + 6]"],
-    ["Für 2,5 Stunden zahlen Sie [10 €|*16 €|19 €]"],
-    ["Mit 30&nbsp;€ können Sie [5|7,5|*6] Stunden fahren","rückwärts rechnen"],
-    ["Fehler finden: Ein Mitschüler sagt, bei f(x) = 3 + 5 · x ist m = 3. Richtig ist m = [*5|8|3]","Zahl vor dem x"],
-    ["Ein anderer Verleih nimmt keinen Grundpreis und 5&nbsp;€ je Stunde. Dort ist b = [5|*0|1]"]
+    ["Die Gerade f schneidet die y-Achse im Punkt (0 | [0|6|*3])"],
+    ["Die Gerade g hat die Steigung m = [*2|0,5|4]","1\u00a0nach\u00a0rechts, wie\u00a0viel\u00a0nach\u00a0oben?"],
+    ["Zu g gehört die Gleichung g(x) = [x + 2|*2 · x|2 · x + 2]"],
+    ["Zu f gehört die Gleichung f(x) = [3 · x + 1|3 · x|*1 · x + 3]"],
+    ["Beide Geraden gehen durch den Punkt S([6|*3|2] | [*6|3|8])"],
+    ["Bei x&nbsp;=&nbsp;1 liegt [g|*f|keine] höher, bei x&nbsp;=&nbsp;4 liegt [f|keine|*g] höher"],
+    ["Fehler finden: Eine Mitschülerin zeichnet h(x)&nbsp;=&nbsp;2&nbsp;·&nbsp;x&nbsp;+&nbsp;5 durch den Punkt (0\u00a0|\u2060\u00a02). Richtig ist der Punkt (0 | [2|*5|7])","Zahl\u00a0ohne\u00a0x"]
   ],
 
   // Stufe 3: Aufgaben mit Eingabefeldern (nur Zahlen eingeben)
   stufe3:[
-    {gleichung:"Lieferdienst: Liefergebühr 3&nbsp;€ und 8&nbsp;€ je Pizza", schritte:["m = {8}","b = {3}","4 Pizzen kosten mit Lieferung {35} €"], loesungen:[]},
-    {gleichung:"Eine Gerade geht durch (0 | 5) und (2 | 11)", schritte:["b = {5}","m = {3}","An der Stelle x = 20 hat sie den Wert {65}"], loesungen:[]},
-    {gleichung:"Für Schnelle – Tarif A: Grundpreis 12&nbsp;€ und 1&nbsp;€ je GB · Tarif B: kein Grundpreis und 3&nbsp;€ je GB", schritte:["Tarif A: m = {1} und b = {12}","Tarif B: m = {3} und b = {0}","4 GB kosten bei Tarif A {16} € und bei Tarif B {12} €","Gleich viel kosten beide bei {6} GB","Im Heft: Ab wie vielen GB ist Tarif A günstiger? Begründen Sie."], loesungen:[]}
+    {gleichung:"Sie zeichnen die Gerade zu f(x)&nbsp;=&nbsp;2&nbsp;·&nbsp;x&nbsp;+&nbsp;3", schritte:["Punkt auf der y-Achse: (0 | {3})","Punkt bei x = 4: (4 | {11})","Der y-Wert ist 15 bei x = {6}"], loesungen:[]},
+    {gleichung:"Sie zeichnen die Gerade zu g(x)&nbsp;=&nbsp;−2&nbsp;·&nbsp;x&nbsp;+&nbsp;10", schritte:["Punkt auf der y-Achse: (0 | {10})","Punkt bei x = 3: (3 | {4})","Punkt auf der x-Achse: ({5} | 0)"], loesungen:[]},
+    {gleichung:"Für Schnelle – Tarif A: Grundpreis 12&nbsp;€ und 1&nbsp;€ je GB · Tarif B: kein Grundpreis und 3&nbsp;€ je GB", schritte:["Gerade zu Tarif A: (0 | {12}) und (4 | {16})","Gerade zu Tarif B: (0 | {0}) und (4 | {12})","Beide Geraden gehen durch den Punkt ({6} | {18})","Im Heft: Ab wie vielen GB ist Tarif A günstiger? Begründen Sie mit den beiden Geraden."], loesungen:[]}
   ],
 
   // Hilfetexte (Glühbirne) je Stufe
-  hilfe1:"f(x) = m · x + b: m ist die Zahl vor dem x, b ist die Zahl ohne x.\nDie Reihenfolge ist egal: f(x) = 6 + 3 · x hat m = 3 und b = 6.\nDas Minus gehört zur Zahl: Bei −2 · x ist m = −2.\nIm Alltag: m ist die Änderung je Schritt (je GB, je Monat). b ist der Startwert (Grundpreis, Anmeldung).",
-  hilfe2:"m ist der Preis je Stunde, b ist der Grundpreis.\n2,5 Stunden: 4 · 2,5 + 6.\nRückwärts: erst den Grundpreis abziehen, dann durch den Preis je Stunde teilen.\nFehler finden: m ist die Zahl vor dem x, auch wenn sie hinten steht.\nKein Grundpreis: Bei x = 0 kostet es nichts.",
-  hilfe3:"Die Liefergebühr zahlen Sie einmal: Das ist b. Je Pizza kommt gleich viel dazu: Das ist m.\nGerade: Der Punkt mit x = 0 zeigt b. Von x = 0 bis x = 2 geht es 6 nach oben: m = 6 : 2.\nTarife: Kosten = m · x + b. Gleich viel: beide Tarife für 4, 5, 6 und 7 GB ausrechnen.\nGeben Sie nur die Zahl ein.\nIm Heft: Begründung ins Heft, Besprechung später."
+  hilfe1:"Setzen Sie x ein und rechnen Sie y aus.\nBei x = 0 bleibt nur b: Der Punkt (0 | b) liegt auf der y-Achse.\nBeispiel f(x) = 3 · x + 1: (0 | 1) und (2 | 7), denn 3 · 2 + 1 = 7.\nGrundpreis oder Anmeldung: Das ist der Wert bei x = 0.",
+  hilfe2:"Punkt (x | y): erst nach rechts, dann nach oben.\nAuf der y-Achse lesen Sie b ab.\nSteigung m: 1 nach rechts gehen, dann die Kästchen nach oben zählen.\nGleichung: f(x) = m · x + b.\nPunkt S: Dort kreuzen sich die Geraden.\nHöher: größerer y-Wert.\nFehler finden: Bei x = 0 bleibt nur b.",
+  hilfe3:"y-Achse: x = 0 einsetzen.\nAnderer Punkt: Zahl für x einsetzen, zum Beispiel 2 · 4 + 3.\nRückwärts: erst b abziehen, dann durch m teilen.\nx-Achse: Dort ist y = 0.\nTarife: x ist die Zahl der GB, y ist der Preis. Rechnen Sie beide Tarife für 4, 5, 6 und 7 GB aus.\nGeben Sie nur die Zahl ein.\nIm Heft: Begründung ins Heft, Besprechung später."
 };
 /* ======================= ENDE DES INHALTSBLOCKS ===================== */
 </script>
@@ -79,6 +87,8 @@ dialog{border:9px solid #ddd;border-radius:14px;max-width:min(550px,calc(100vw -
 @media(max-width:600px){header{height:42px}.workspace,.collection{min-height:calc(100dvh - 42px)}.stage-count{display:none}.collection{padding:32px 12px}.tiles{gap:14px}.tile{width:158px;min-height:164px}.tile-art{height:84px}.tile-label{font-size:13px}.collection h2{font-size:22px}#s1{padding:43px 6px 0}#board{height:calc(100svh - 85px)}.card{border-width:3px;border-radius:10px;padding:2px 2px}.card::before{width:12px;height:12px;left:calc(50% - 6px);top:-6px}.split{height:14px;top:calc(var(--ch) - 6px);left:25%;width:50%}.check{width:61px;height:61px;right:14px;bottom:16px}.check svg{width:31px;height:31px}.feedback{font-size:13px;left:10px;bottom:15px;max-width:calc(100% - 92px);padding:5px 8px}.sheet{padding:58px 14px 100px}.line{font-size:18px;margin-bottom:18px;line-height:2.2}.line .r{font-size:13px;margin-left:4px}input,select{font-size:18px;min-width:0;min-height:41px;padding:3px 5px}select{max-width:100px}input{width:3em}dialog{border-width:7px;padding:15px 12px}dialog h2{font-size:23px}dialog p{font-size:18px}dialog button{font-size:20px}.mini-card{font-size:16px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 .card{background:#e8f2fc}.card.solution{background:#fff8dc}.card::before{background:linear-gradient(130deg,#46b8e5,#1b99d2);border-color:#54b7d9}.card.solution::before{background:linear-gradient(130deg,#ffbf80,#ff9d54);border-color:#ffc889}.unit.pair .card:nth-child(2)::before{display:none}
+/* Nur in diesem Spiel (v3): Zeichnung über den Zeilen von Stufe 2; sie bleibt beim Scrollen oben stehen. */
+.plotbox{position:-webkit-sticky;position:sticky;top:0;z-index:4;margin:0 0 10px;padding:6px 0 8px;background:#fff3b9;box-shadow:0 7px 6px -6px #0003}.plot{display:block;margin:0 auto;width:100%;height:auto;max-width:min(var(--pw),calc(42vh*var(--pr)));max-width:min(var(--pw),calc(42svh*var(--pr)));background:#fff;border:1px solid #c9c2a0;border-radius:8px}.plot .pg{stroke:#b7c2cd;stroke-width:1;fill:none}.plot .pa{stroke:#222;stroke-width:1.8;fill:none}.plot .ph{fill:#222}.plot text{font-family:Arial,Helvetica,sans-serif}.plot .pn{font-size:14px;fill:#333}.plot .pv{font-size:15px;font-style:italic;fill:#222}.plot .pl{font-size:18px;font-weight:bold;font-style:italic}.nb{white-space:nowrap}@media(max-height:519px){.plotbox{position:static}.plot{max-width:var(--pw)}}
 </style>
 </head>
 <body>
@@ -108,9 +118,13 @@ const HELP=["",SPIEL.hilfe1+"\n\nZum Trennen eines Paares tippen Sie auf den Str
 const TITLES=[SPIEL.titel+' · '+SPIEL.fach,'Stufe 1 · Paare zuordnen','Stufe 2 · Zahlen auswählen','Stufe 3 · Lösungen eintragen'];
 const NUMBERS=['null','ein','zwei','drei','vier','fünf','sechs','sieben','acht','neun','zehn'];
 function esc(t){return String(t).replace(/&(?!nbsp;)/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+/* Nur in diesem Spiel (v3): zeichnet SPIEL.zeichnung2 als Bild. Achsen und Geraden liegen auf den Kästchenlinien, ein Kästchen ist 1. */
+function plot(z){if(!z)return '';const u=30,L=32,T=32,R=28,B=30,W=L+z.xmax*u+R,H=T+z.ymax*u+B,X=x=>L+x*u,Y=y=>T+(z.ymax-y)*u,C=['#1565c0','#d84315','#2e7d32'];let s='';for(let x=0;x<=z.xmax;x++)s+='<path class="pg" d="M'+X(x)+' '+Y(0)+'V'+Y(z.ymax)+'"/>';for(let y=0;y<=z.ymax;y++)s+='<path class="pg" d="M'+X(0)+' '+Y(y)+'H'+X(z.xmax)+'"/>';s+='<path class="pa" d="M'+X(0)+' '+Y(0)+'H'+(X(z.xmax)+13)+'M'+X(0)+' '+Y(0)+'V'+(Y(z.ymax)-13)+'"/><path class="ph" d="M'+(X(z.xmax)+21)+' '+Y(0)+'l-10 -4.5v9zM'+X(0)+' '+(Y(z.ymax)-21)+'l-4.5 10h9z"/>';for(let x=1;x<=z.xmax;x++)s+='<text class="pn" x="'+X(x)+'" y="'+(Y(0)+18)+'" text-anchor="middle">'+x+'</text>';for(let y=1;y<=z.ymax;y++)s+='<text class="pn" x="'+(X(0)-8)+'" y="'+(Y(y)+5)+'" text-anchor="end">'+y+'</text>';s+='<text class="pn" x="'+(X(0)-8)+'" y="'+(Y(0)+18)+'" text-anchor="end">0</text><text class="pv" x="'+(X(z.xmax)+17)+'" y="'+(Y(0)+21)+'" text-anchor="middle">x</text><text class="pv" x="'+(X(0)-15)+'" y="'+(Y(z.ymax)-11)+'" text-anchor="middle">y</text>';z.geraden.forEach(([n,x1,y1,x2,y2],i)=>{const c=C[i%C.length];s+='<path d="M'+X(x1)+' '+Y(y1)+'L'+X(x2)+' '+Y(y2)+'" stroke="'+c+'" stroke-width="3.2" stroke-linecap="round" fill="none"/><text class="pl" x="'+(X(x2)+3)+'" y="'+(Y(y2)-9)+'" text-anchor="middle" fill="'+c+'">'+esc(n)+'</text>'});return '<div class="plotbox"><svg class="plot" viewBox="0 0 '+W+' '+H+'" style="--pw:'+W+'px;--pr:'+(W/H).toFixed(3)+'" role="img" aria-label="'+esc(z.alt||'Zeichnung')+'">'+s+'</svg></div>'}
+/* Nur in diesem Spiel (v3): ein Punkt mit Auswahl- oder Eingabefeld, zum Beispiel (0 | {3}), bricht nicht um. */
+function nb(h){return h.replace(/\(([^()]*(?:\[[^\]]+\]|\{[^}]+\})[^()]*)\)/g,'<span class="nb">($1)</span>')}
 function fillContent(){document.title=SPIEL.titel+' · Lernspiele';const meta=document.createElement('meta');meta.name='description';meta.content=SPIEL.titel+': Zuordnung, Auswahl und Lückentext. Ein '+SPIEL.fach+'-Lernspiel für fünf Minuten.';document.head.append(meta);$('title').textContent=TITLES[0];$('ver').textContent=SPIEL.version;$('c-title').textContent=SPIEL.titel;$('c-sub').textContent=SPIEL.untertitel;$('f-sub').textContent=SPIEL.untertitel;$('mini1').textContent=SPIEL.beispielkarten[0];$('mini2').textContent=SPIEL.beispielkarten[1];
-$('t2').innerHTML=SPIEL.stufe2.map(([line,hint])=>'<div class="line">'+esc(line).replace(/\[([^\]]+)\]/g,(m,list)=>{const opts=list.split('|').map(o=>o.trim());const right=opts.find(o=>o.startsWith('*'));return '<select data-a="'+(right?right.slice(1).trim():'')+'"><option value="">?</option>'+opts.map(o=>'<option>'+o.replace(/^\*/,'').trim()+'</option>').join('')+'</select>'})+(hint?' <span class="r">'+esc(hint)+'</span>':'')+'</div>').join('');
-$('t3').innerHTML=SPIEL.stufe3.map((t,k)=>{const field=a=>'<input data-a="'+a.trim()+'">';const steps=(t.schritte||[]).map(l=>esc(l).replace(/\{([^}]+)\}/g,(m,a)=>field(a))).join('<br>');const sol=t.loesungen.length===1?'x = <input data-set="s'+k+'" data-a="'+esc(t.loesungen[0])+'">':t.loesungen.map((a,i)=>'x'+'₁₂₃₄'[i]+' = <input data-set="s'+k+'" data-a="'+esc(a)+'">').join(' &nbsp; ');return '<div class="line"><span class="eq">'+esc(t.gleichung)+'</span>'+steps+(steps?'<br>':'')+sol+'</div>'}).join('')}
+$('t2').innerHTML=plot(SPIEL.zeichnung2)+SPIEL.stufe2.map(([line,hint])=>'<div class="line">'+nb(esc(line)).replace(/\[([^\]]+)\]/g,(m,list)=>{const opts=list.split('|').map(o=>o.trim());const right=opts.find(o=>o.startsWith('*'));return '<select data-a="'+(right?right.slice(1).trim():'')+'"><option value="">?</option>'+opts.map(o=>'<option>'+o.replace(/^\*/,'').trim()+'</option>').join('')+'</select>'})+(hint?' <span class="r">'+esc(hint)+'</span>':'')+'</div>').join('');
+$('t3').innerHTML=SPIEL.stufe3.map((t,k)=>{const field=a=>'<input data-a="'+a.trim()+'">';const steps=(t.schritte||[]).map(l=>nb(esc(l)).replace(/\{([^}]+)\}/g,(m,a)=>field(a))).join('<br>');const sol=t.loesungen.length===1?'x = <input data-set="s'+k+'" data-a="'+esc(t.loesungen[0])+'">':t.loesungen.map((a,i)=>'x'+'₁₂₃₄'[i]+' = <input data-set="s'+k+'" data-a="'+esc(a)+'">').join(' &nbsp; ');return '<div class="line"><span class="eq">'+esc(t.gleichung)+'</span>'+steps+(steps?'<br>':'')+sol+'</div>'}).join('')}
 fillContent();
 let stage=0,unlocked=1,completed=[false,false,false,false],units=[],uid=0,cw=230,ch=60,pg=6,fs=16,joining=false,lastW=window.innerWidth,selected=null,drag=null,skipClick=false,dialogAction=null,lastFocus=null,zTop=1;
 const board=$('board');

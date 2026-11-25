@@ -29,19 +29,20 @@
 const SPIEL={
   titel:"Punkte auf Geraden",                    // Spieltitel
   fach:"Mathematik",
-  untertitel:"Gleichung und Punkte zuordnen · Punkte ablesen · Punkte berechnen",
+  untertitel:"Gleichung und Punkt zuordnen · Punkte ablesen · Punkte berechnen",
   datum:"2026-11-27",                            // Unterrichtsdatum
-  version:"Claude-Version · v3",                 // sichtbare Versionsmarke oben rechts
+  version:"Claude-Version · v4",                 // sichtbare Versionsmarke oben rechts
   beispielkarten:["2\u00a0·\u00a0x\u00a0+\u00a04","(2\u00a0|\u2060\u00a08)"],   // die zwei Mini-Karten auf der Kachel von Stufe 1 (kurz und mit festen Leerzeichen, damit auf dem Handy nichts umbricht)
 
-  // Stufe 1: Paare zuordnen [linke Karte, passende Karte]; feste Leerzeichen (\\u00a0) und hinter dem Strich ein unsichtbares Verbindungszeichen (\\u2060), damit ein Punkt nie mitten in der Klammer umbricht
+  // Stufe 1: Paare zuordnen [Gleichung, Punkt bei x = 2]; je Paar nur eine Rechnung (seit v4; Tony 25.11.2026: v3 war zu kompliziert).
+  // Feste Leerzeichen und ein unsichtbares Verbindungszeichen hinter dem Strich, damit ein Punkt nie mitten in der Klammer umbricht.
   paare:[
-    ["f(x) = 2 · x + 4","(0\u00a0|\u2060\u00a04) und (2\u00a0|\u2060\u00a08)"],
-    ["f(x) = 4 · x + 2","(0\u00a0|\u2060\u00a02) und (2\u00a0|\u2060\u00a010)"],
-    ["f(x) = 4 + 3 · x","(0\u00a0|\u2060\u00a04) und (2\u00a0|\u2060\u00a010)"],
-    ["f(x) = −2 · x + 8","(0\u00a0|\u2060\u00a08) und (2\u00a0|\u2060\u00a04)"],
-    ["Grundpreis 10 €, je\u00a0GB\u00a02\u00a0€","(0\u00a0|\u2060\u00a010) und (5\u00a0|\u2060\u00a020)"],
-    ["Anmeldung 0 €, je\u00a0Monat\u00a09\u00a0€","(0\u00a0|\u2060\u00a00) und (2\u00a0|\u2060\u00a018)"]
+    ["f(x) = 2 · x + 4","(2\u00a0|\u2060\u00a08)"],
+    ["f(x) = 2 · x + 1","(2\u00a0|\u2060\u00a05)"],
+    ["f(x) = 3 · x + 1","(2\u00a0|\u2060\u00a07)"],
+    ["f(x) = 3 · x","(2\u00a0|\u2060\u00a06)"],
+    ["f(x) = 4 · x + 1","(2\u00a0|\u2060\u00a09)"],
+    ["f(x) = 5 · x","(2\u00a0|\u2060\u00a010)"]
   ],
 
   // Zeichnung über den Zeilen von Stufe 2: Kästchen 0 bis xmax und 0 bis ymax, je Kästchen 1; Geraden [Name, x1, y1, x2, y2]
@@ -49,26 +50,23 @@ const SPIEL={
 
   // Stufe 2: Zeilen mit Auswahllisten [Zeile, grauer Hinweis rechts (optional)]
   stufe2:[
-    ["Die Gerade f schneidet die y-Achse im Punkt (0 | [0|6|*3])"],
-    ["Die Gerade g hat die Steigung m = [*2|0,5|4]","1\u00a0nach\u00a0rechts, wie\u00a0viel\u00a0nach\u00a0oben?"],
-    ["Zu g gehört die Gleichung g(x) = [x + 2|*2 · x|2 · x + 2]"],
-    ["Zu f gehört die Gleichung f(x) = [3 · x + 1|3 · x|*1 · x + 3]"],
-    ["Beide Geraden gehen durch den Punkt S([6|*3|2] | [*6|3|8])"],
-    ["Bei x&nbsp;=&nbsp;1 liegt [g|*f|keine] höher, bei x&nbsp;=&nbsp;4 liegt [f|keine|*g] höher"],
-    ["Fehler finden: Eine Mitschülerin zeichnet h(x)&nbsp;=&nbsp;2&nbsp;·&nbsp;x&nbsp;+&nbsp;5 durch den Punkt (0\u00a0|\u2060\u00a02). Richtig ist der Punkt (0 | [2|*5|7])","Zahl\u00a0ohne\u00a0x"]
+    ["Die Gerade f trifft die y-Achse im Punkt (0 | [0|6|*3])"],
+    ["Die Gerade g geht durch den Punkt (2 | [*4|2|5])"],
+    ["Die beiden Geraden treffen sich im Punkt S([6|*3|2] | [*6|3|8])"],
+    ["Fehler finden: Ein Mitschüler sagt, g geht durch (4\u00a0|\u2060\u00a02). Richtig ist (4 | [2|7|*8])","erst\u00a0x,\u00a0dann\u00a0y"]
   ],
 
   // Stufe 3: Aufgaben mit Eingabefeldern (nur Zahlen eingeben)
   stufe3:[
-    {gleichung:"Sie zeichnen die Gerade zu f(x)&nbsp;=&nbsp;2&nbsp;·&nbsp;x&nbsp;+&nbsp;3", schritte:["Punkt auf der y-Achse: (0 | {3})","Punkt bei x = 4: (4 | {11})","Der y-Wert ist 15 bei x = {6}"], loesungen:[]},
-    {gleichung:"Sie zeichnen die Gerade zu g(x)&nbsp;=&nbsp;−2&nbsp;·&nbsp;x&nbsp;+&nbsp;10", schritte:["Punkt auf der y-Achse: (0 | {10})","Punkt bei x = 3: (3 | {4})","Punkt auf der x-Achse: ({5} | 0)"], loesungen:[]},
-    {gleichung:"Für Schnelle – Tarif A: Grundpreis 12&nbsp;€ und 1&nbsp;€ je GB · Tarif B: kein Grundpreis und 3&nbsp;€ je GB", schritte:["Gerade zu Tarif A: (0 | {12}) und (4 | {16})","Gerade zu Tarif B: (0 | {0}) und (4 | {12})","Beide Geraden gehen durch den Punkt ({6} | {18})","Im Heft: Ab wie vielen GB ist Tarif A günstiger? Begründen Sie mit den beiden Geraden."], loesungen:[]}
+    {gleichung:"Sie zeichnen die Gerade zu f(x)&nbsp;=&nbsp;2&nbsp;·&nbsp;x&nbsp;+&nbsp;1", schritte:["Punkt auf der y-Achse: (0 | {1})","Punkt bei x = 3: (3 | {7})"], loesungen:[]},
+    {gleichung:"Handytarif: Grundpreis 10&nbsp;€ und 2&nbsp;€ je GB", schritte:["Punkt bei 0 GB: (0 | {10})","Punkt bei 4 GB: (4 | {18})"], loesungen:[]},
+    {gleichung:"Für Schnelle – f(x)&nbsp;=&nbsp;3&nbsp;·&nbsp;x und g(x)&nbsp;=&nbsp;2&nbsp;·&nbsp;x&nbsp;+&nbsp;2", schritte:["Die Geraden treffen sich im Punkt S({2} | {6})","Im Heft: Zeichnen Sie beide Geraden und prüfen Sie S."], loesungen:[]}
   ],
 
   // Hilfetexte (Glühbirne) je Stufe
-  hilfe1:"Setzen Sie x ein und rechnen Sie y aus.\nBei x = 0 bleibt nur b: Der Punkt (0 | b) liegt auf der y-Achse.\nBeispiel f(x) = 3 · x + 1: (0 | 1) und (2 | 7), denn 3 · 2 + 1 = 7.\nGrundpreis oder Anmeldung: Das ist der Wert bei x = 0.",
-  hilfe2:"Punkt (x | y): erst nach rechts, dann nach oben.\nAuf der y-Achse lesen Sie b ab.\nSteigung m: 1 nach rechts gehen, dann die Kästchen nach oben zählen.\nGleichung: f(x) = m · x + b.\nPunkt S: Dort kreuzen sich die Geraden.\nHöher: größerer y-Wert.\nFehler finden: Bei x = 0 bleibt nur b.",
-  hilfe3:"y-Achse: x = 0 einsetzen.\nAnderer Punkt: Zahl für x einsetzen, zum Beispiel 2 · 4 + 3.\nRückwärts: erst b abziehen, dann durch m teilen.\nx-Achse: Dort ist y = 0.\nTarife: x ist die Zahl der GB, y ist der Preis. Rechnen Sie beide Tarife für 4, 5, 6 und 7 GB aus.\nGeben Sie nur die Zahl ein.\nIm Heft: Begründung ins Heft, Besprechung später."
+  hilfe1:"Setzen Sie x = 2 ein und rechnen Sie y aus.\nBeispiel f(x) = 4 · x + 3: 4 · 2 + 3 = 11. Der Punkt (2 | 11) liegt auf dieser Geraden.",
+  hilfe2:"Ein Punkt (x | y): erst nach rechts, dann nach oben.\nAuf der y-Achse ist x = 0.\nS: Dort treffen sich die beiden Geraden.\nFehler finden: Zuerst steht x, dann y.",
+  hilfe3:"Punkt auf der y-Achse: x = 0 einsetzen.\nAnderer Punkt: die Zahl für x einsetzen, zum Beispiel 2 · 3 + 1.\nHandytarif: x ist die Zahl der GB, y ist der Preis.\nFür Schnelle: f und g für x = 1, 2 und 3 ausrechnen.\nGeben Sie nur die Zahl ein."
 };
 /* ======================= ENDE DES INHALTSBLOCKS ===================== */
 </script>

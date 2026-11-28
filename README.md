@@ -5,6 +5,7 @@ Interaktive Lernspiele für den Mathematikunterricht – direkt im Browser, ohne
 
 | Spiel | Unterrichtsdatum | Schülerlink |
 |---|---|---|
+| Steigung bestimmen (Mathematik 11AI1: Steigungsdreieck und Steigung zuordnen, Steigung erkennen, Steigung berechnen; Einstieg vor AB 16 und AB 17 Steigungswinkel und Schnittwinkel; Claude-Version · v1, aus gemeinsamer Vorlage v8) | 30.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-30-schnittwinkel/ |
 | Reihen- und Parallelschaltung (Elektrotechnik: Ersatzwiderstand, Teilströme und Teilspannungen als Vorwissen vor der gemischten Schaltung; Claude-Version · v1, aus gemeinsamer Vorlage v8) | 23.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-23-et-ersatzwiderstand/ |
 | Gemischte Schaltung (Elektrotechnik: Reihe und parallel erkennen, Ersatzwiderstand schrittweise zusammenfassen, Messung am Durchlauferhitzer vorbereiten; Claude-Version · v2 vom 22.11.2026 ohne den Fehlerfall, der jetzt Auftrag in AB 03 ist; aus gemeinsamer Vorlage v8) | 24.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-24-et-gemischte-schaltung/ |
 | Spannungsquelle mit Innenwiderstand (Elektrotechnik: Quellenspannung, Klemmenspannung, Leerlauf und Kurzschluss, Reihenschaltung von Spannungsquellen; Claude-Version · v1, aus gemeinsamer Vorlage v8) | 26.11.2026 | https://tonchime.github.io/lernspiele/spiele/2026-11-26-et-spannungsquelle/ |
